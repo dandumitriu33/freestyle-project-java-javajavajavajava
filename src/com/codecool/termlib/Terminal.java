@@ -1,6 +1,29 @@
 package com.codecool.termlib;
 
+import java.util.Scanner;
+
 public class Terminal {
+
+    public static void main(String[] args) {
+        System.out.println(Attribute.values());
+        for (Attribute i:Attribute.values()) {
+            System.out.println(i);
+        }
+        System.out.println("test 3");
+        Terminal gg = new Terminal();
+        System.out.println(gg.CLEAR);
+
+        String x ="";
+        Scanner sc = new Scanner(System.in);
+
+        while (!x.equals("quit")) {
+            System.out.print("enter command: ");
+            x = sc.next();
+            System.out.println("you entered: " + x);
+        }
+
+    }
+
     /**
      * The beginning of control sequences.
      */
