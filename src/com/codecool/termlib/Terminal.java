@@ -60,16 +60,13 @@ public class Terminal {
                 String attrib = myList.get(1).toUpperCase();
                 Attribute myAttrib;
                 switch (attrib) {
-//                    case "BRIGHT":
-//                        myAttrib = Attribute.BRIGHT;
-//                        setBgColor(myColor);
-//                        break;
-//                    case "DIM":
-//                        myColor = Color.GREEN;
-//                        setBgColor(myColor);
-//                        break;
+                    case "BRIGHT":
+                        brighten();
+                        break;
+                    case "DIM":
+                        dim();
+                        break;
                     case "UNDERSCORE":
-//                        myAttrib = Attribute.UNDERSCORE;
                         setUnderline();
                         break;
 //                    case "BLINK":
@@ -77,7 +74,6 @@ public class Terminal {
 //                        setBgColor(myColor);
 //                        break;
                     case "REVERSE":
-//                        myColor = Color.MAGENTA;
                         reverse();
                         break;
 //                    case "HIDDEN":
@@ -226,6 +222,19 @@ public class Terminal {
         System.out.println("\033[7m");
     }
 
+    /**
+     * Brightens the text. (Bold text in text editors and a lighter white.)
+     */
+    public static void brighten() {
+        System.out.println("\033[1m");
+    }
+
+    /**
+     * Dims the text. (Turns the text a darker shade of gray.)
+     */
+    public static void dim() {
+        System.out.println("\033[2m");
+    }
 
     /**
      * Move the cursor relatively.
