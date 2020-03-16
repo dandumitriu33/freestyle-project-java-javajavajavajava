@@ -1,5 +1,8 @@
 package com.codecool.termlib;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 import com.codecool.termlib.Color;
 
@@ -12,13 +15,10 @@ public class Terminal {
         while (!x.equals("quit")) {
             System.out.print("enter command: ");
             x = sc.nextLine();
-            System.out.println("you entered: " + x);
-            if (x.equals("clr")) {
-                System.out.println("clearing screen");
-                clearScreen();
-            }
-            if (x.substring(0,7).equals("bgcolor")) {
-                String bgc = x.substring(8).toUpperCase();
+            List<String> myList = new ArrayList<String>(Arrays.asList(x.split(" ")));
+
+            if (myList.get(0).equals("bgcolor")) {
+                String bgc = myList.get(1).toUpperCase();
                 Color myColor;
                 switch(bgc) {
                     case "RED":
@@ -56,7 +56,50 @@ public class Terminal {
                 }
 
             }
-        }
+            else if (myList.get(0).equals("attribute")) {
+                String attrib = myList.get(1).toUpperCase();
+                Attribute myAttrib;
+                switch (attrib) {
+//                    case "BRIGHT":
+//                        myAttrib = Attribute.BRIGHT;
+//                        setBgColor(myColor);
+//                        break;
+//                    case "DIM":
+//                        myColor = Color.GREEN;
+//                        setBgColor(myColor);
+//                        break;
+                    case "UNDERSCORE":
+//                        myAttrib = Attribute.UNDERSCORE;
+                        setUnderline();
+                        break;
+//                    case "BLINK":
+//                        myColor = Color.BLUE;
+//                        setBgColor(myColor);
+//                        break;
+//                    case "REVERSE":
+//                        myColor = Color.MAGENTA;
+//                        setBgColor(myColor);
+//                        break;
+//                    case "HIDDEN":
+//                        myColor = Color.CYAN;
+//                        setBgColor(myColor);
+//                        break;
+//                    case "RESET":
+//                        myColor = Color.BLACK;
+//                        setBgColor(myColor);
+//                        break;
+                }
+            }
+            else if (myList.get(0).equals("clr")) {
+                System.out.println("clearing screen");
+                clearScreen();
+            }
+            else {
+                System.out.println("you entered: " + x);
+            }
+
+
+            }
 
     }
 
@@ -172,7 +215,8 @@ public class Terminal {
      * underlined.  Cannot be turned off without turning off colors as
      * well.
      */
-    public void setUnderline() {
+    public static void setUnderline() {
+        System.out.println("\033[4m");
     }
 
     /**
