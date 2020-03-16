@@ -1,25 +1,61 @@
 package com.codecool.termlib;
 
 import java.util.Scanner;
+import com.codecool.termlib.Color;
 
 public class Terminal {
 
     public static void main(String[] args) {
-        System.out.println(Attribute.values());
-        for (Attribute i:Attribute.values()) {
-            System.out.println(i);
-        }
-        System.out.println("test 3");
-        Terminal gg = new Terminal();
-        System.out.println(gg.CLEAR);
-
         String x ="";
         Scanner sc = new Scanner(System.in);
 
         while (!x.equals("quit")) {
             System.out.print("enter command: ");
-            x = sc.next();
+            x = sc.nextLine();
             System.out.println("you entered: " + x);
+            if (x.equals("clr")) {
+                System.out.println("clearing screen");
+                clearScreen();
+            }
+            if (x.substring(0,7).equals("bgcolor")) {
+                String bgc = x.substring(8).toUpperCase();
+                Color myColor;
+                switch(bgc) {
+                    case "RED":
+                        myColor = Color.RED;
+                        setBgColor(myColor);
+                        break;
+                    case "GREEN":
+                        myColor = Color.GREEN;
+                        setBgColor(myColor);
+                        break;
+                    case "YELLOW":
+                        myColor = Color.YELLOW;
+                        setBgColor(myColor);
+                        break;
+                    case "BLUE":
+                        myColor = Color.BLUE;
+                        setBgColor(myColor);
+                        break;
+                    case "MAGENTA":
+                        myColor = Color.MAGENTA;
+                        setBgColor(myColor);
+                        break;
+                    case "CYAN":
+                        myColor = Color.CYAN;
+                        setBgColor(myColor);
+                        break;
+                    case "BLACK":
+                        myColor = Color.BLACK;
+                        setBgColor(myColor);
+                        break;
+                    case "WHITE":
+                        myColor = Color.WHITE;
+                        setBgColor(myColor);
+                        break;
+                }
+
+            }
         }
 
     }
@@ -62,7 +98,13 @@ public class Terminal {
      *
      * Might reset cursor position.
      */
-    public void clearScreen() {
+    public static void clearScreen() {
+//        System.out.println("\033[H\033[2J");
+        System.out.println(CONTROL_CODE);
+        System.out.println(CLEAR);
+        System.out.println(CONTROL_CODE);
+        System.out.println(MOVE);
+
     }
 
     /**
@@ -94,7 +136,33 @@ public class Terminal {
      *
      * @param color The background color to set.
      */
-    public void setBgColor(Color color) {
+    public static void setBgColor(Color color) {
+        switch(color) {
+            case RED:
+                System.out.print("\033[41m");
+                break;
+            case GREEN:
+                System.out.print("\033[42m");
+                break;
+            case YELLOW:
+                System.out.print("\033[43m");
+                break;
+            case BLUE:
+                System.out.print("\033[44m");
+                break;
+            case MAGENTA:
+                System.out.print("\033[45m");
+                break;
+            case CYAN:
+                System.out.print("\033[46m");
+                break;
+            case BLACK:
+                System.out.print("\033[40m");
+                break;
+            case WHITE:
+                System.out.print("\033[47m");
+                break;
+        }
     }
 
     /**
