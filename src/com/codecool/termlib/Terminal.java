@@ -85,6 +85,29 @@ public class Terminal {
 //                        break;
                 }
             }
+            else if (myList.get(0).equals("move")) {
+                String dir = myList.get(1).toUpperCase();
+                int amount;
+                switch(dir) {
+                    case "UP":
+                        amount = Integer.parseInt(myList.get(2));
+                        moveCursor(Direction.UP, amount);
+                        break;
+                    case "DOWN":
+                        amount = Integer.parseInt(myList.get(2));
+                        moveCursor(Direction.DOWN, amount);
+                        break;
+                    case "FORWARD":
+                        amount = Integer.parseInt(myList.get(2));
+                        moveCursor(Direction.FORWARD, amount);
+                        break;
+                    case "BACKWARD":
+                        amount = Integer.parseInt(myList.get(2));
+                        moveCursor(Direction.BACKWARD, amount);
+                        break;
+                }
+
+            }
             else if (myList.get(0).equals("clr")) {
                 System.out.println("clearing screen");
                 clearScreen();
@@ -251,7 +274,22 @@ public class Terminal {
      * @param direction Step the cursor in this direction.
      * @param amount Step the cursor this many times.
      */
-    public void moveCursor(Direction direction, Integer amount) {
+    public static void moveCursor(Direction direction, Integer amount) {
+        switch(direction) {
+            case UP:
+                System.out.print("\033[" + amount + "A");
+                break;
+            case DOWN:
+                System.out.print("\033[" + amount + "B");
+                break;
+            case FORWARD:
+                System.out.print("\033[" + amount + "C");
+                break;
+            case BACKWARD:
+                System.out.print("\033[" + amount + "D");
+                break;
+        }
+
     }
 
     /**
