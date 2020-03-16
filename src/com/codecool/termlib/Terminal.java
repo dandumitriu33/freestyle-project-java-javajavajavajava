@@ -76,10 +76,9 @@ public class Terminal {
                     case "REVERSE":
                         reverse();
                         break;
-//                    case "HIDDEN":
-//                        myColor = Color.CYAN;
-//                        setBgColor(myColor);
-//                        break;
+                    case "HIDDEN":
+                        hide();
+                        break;
 //                    case "RESET":
 //                        myColor = Color.BLACK;
 //                        setBgColor(myColor);
@@ -234,6 +233,13 @@ public class Terminal {
      */
     public static void dim() {
         System.out.println("\033[2m");
+    }
+
+    /**
+     * Hides the text.
+     */
+    public static void hide() {
+        System.out.println("\033[8m");
     }
 
     /**
