@@ -76,10 +76,10 @@ public class Terminal {
 //                        myColor = Color.BLUE;
 //                        setBgColor(myColor);
 //                        break;
-//                    case "REVERSE":
+                    case "REVERSE":
 //                        myColor = Color.MAGENTA;
-//                        setBgColor(myColor);
-//                        break;
+                        reverse();
+                        break;
 //                    case "HIDDEN":
 //                        myColor = Color.CYAN;
 //                        setBgColor(myColor);
@@ -218,6 +218,14 @@ public class Terminal {
     public static void setUnderline() {
         System.out.println("\033[4m");
     }
+
+    /**
+     * Reverses the default text color and background color.
+     */
+    public static void reverse() {
+        System.out.println("\033[7m");
+    }
+
 
     /**
      * Move the cursor relatively.
