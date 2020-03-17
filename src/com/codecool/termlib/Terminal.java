@@ -11,6 +11,7 @@ public class Terminal {
     public static void main(String[] args) {
         String userInput ="";
         String validatedUserInput = "";
+        String commandString = "";
         Scanner sc = new Scanner(System.in);
         while (!userInput.equals("quit")) {
             System.out.print(">");
@@ -21,50 +22,8 @@ public class Terminal {
                 System.out.println("Invalid command. Please type help for more info.");;
             }
             else if (userInputList.get(0).toLowerCase().equals("bgcolor")) {
-                String bgc = userInputList.get(1).toUpperCase();
-                Color myColor;
-                switch(bgc) {
-                    case "RED":
-                        myColor = Color.RED;
-                        setBgColor(myColor);
-                        break;
-                    case "GREEN":
-                        myColor = Color.GREEN;
-                        setBgColor(myColor);
-                        break;
-                    case "YELLOW":
-                        myColor = Color.YELLOW;
-                        setBgColor(myColor);
-                        break;
-                    case "BLUE":
-                        myColor = Color.BLUE;
-                        setBgColor(myColor);
-                        break;
-                    case "MAGENTA":
-                        myColor = Color.MAGENTA;
-                        setBgColor(myColor);
-                        break;
-                    case "CYAN":
-                        myColor = Color.CYAN;
-                        setBgColor(myColor);
-                        break;
-                    case "BLACK":
-                        myColor = Color.BLACK;
-                        setBgColor(myColor);
-                        break;
-                    case "WHITE":
-                        myColor = Color.WHITE;
-                        setBgColor(myColor);
-                        break;
-                    case "HELP":
-                        System.out.println("** Set a background color by typing: bgcolor <color>");
-                        System.out.println("** Example: bgcolor red");
-                        System.out.println("** Choose from: red, green, blue, yellow, cyan, magenta, black, white");
-                        break;
-                    default:
-                        System.out.println("Invalid parameter. Please type bgcolor help for more details.");
-                }
-
+                commandString = Validation.validateCommandBgcolor(userInputList);
+                command(commandString);
             }
             else if (userInputList.get(0).equals("attribute")) {
                 String attrib = userInputList.get(1).toUpperCase();
@@ -501,6 +460,15 @@ public class Terminal {
      *
      * @param commandString The unique part of a command sequence.
      */
-    private void command(String commandString) {
+    private static void command(String commandString) {
+        if (commandString.substring(0, 7).equals("bgcolor")) {
+            try {
+                setBgColor(Color.valueOf(commandString.substring(8)));
+            }
+            catch (Exception e){
+                System.out.println("Invalid parameter. Please type bgcolor help for more details.");
+            };
+        }
+
     }
 }

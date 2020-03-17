@@ -6,10 +6,6 @@ import java.util.List;
 
 public class Validation {
 
-//    public static void main(String[] args) {
-//
-//    }
-
     /**
      * Initial validation - if it is a command in general.
      *
@@ -30,6 +26,38 @@ public class Validation {
         return "help required";
     }
 
+    /**
+     * bgcolor command validation.
+     */
+
+    public static String validateCommandBgcolor(List<String> userInputList) {
+        String bgc = userInputList.get(1).toUpperCase();
+        switch(bgc) {
+            case "RED":
+                return "bgcolor RED";
+            case "GREEN":
+                return "bgcolor GREEN";
+            case "YELLOW":
+                return "bgcolor YELLOW";
+            case "BLUE":
+                return "bgcolor BLUE";
+            case "MAGENTA":
+                return "bgcolor MAGENTA";
+            case "CYAN":
+                return "bgcolor CYAN";
+            case "BLACK":
+                return "bgcolor BLACK";
+            case "WHITE":
+                return "bgcolor WHITE";
+            case "HELP":
+                System.out.println("** Set a background color by typing: bgcolor <color>");
+                System.out.println("** Example: bgcolor red");
+                System.out.println("** Choose from: red, green, blue, yellow, cyan, magenta, black, white");
+                break;
+        }
+        return "bgcolor INVALID";
+
+    }
 
 
 
