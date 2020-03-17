@@ -120,8 +120,8 @@ public class Terminal {
 
                 }
             }
-            else if (userInputList.get(0).equals("quit")){
-                clearScreen();
+            else if (userInputList.get(0).equals("quit") && userInputList.size()==1){
+                break;
             }
             else if (userInputList.get(0).equals("movecursor")){
                 if (userInputList.size() < 3)
@@ -378,14 +378,11 @@ public class Terminal {
                 System.out.print("\033[" + amount + "D");
                 break;
         }
-
-
     }
 
     /**
      * Displays information on commands, syntax mainly.
      */
-
     public static void help() {
         System.out.println("** Please type: <command> help for each command details.");
         System.out.println("** Available commands: bgcolor, fgcolor, move, movecursor, ");
@@ -396,7 +393,6 @@ public class Terminal {
     /**
      * Displays help info for the attribute command.
      */
-
     public static void helpAttribute() {
         System.out.println("** Set a text attribute by typing: attribute <attribute>");
         System.out.println("** Example attribute bright");
@@ -454,6 +450,9 @@ public class Terminal {
                 System.out.println("Invalid parameter. Please type attribute help for more details.");
             };
         }
+
+
+
     }
 
 

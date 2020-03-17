@@ -17,7 +17,10 @@ public class Validation {
 
     public static String userInputValidation(String userInput) {
         List<String> userInputList = new ArrayList<String>(Arrays.asList(userInput.split(" ")));
-        String[] mainCommands = {"bgcolor", "fgcolor", "attribute", "move", "movecursor", "clear", "help"};
+        String[] mainCommands = {"bgcolor", "fgcolor", "attribute", "move", "movecursor", "clear", "quit", "help"};
+        if (userInputList.get(0).equals("quit") && userInputList.size()>1) {
+            return "help required";
+        }
         for (String mainCommand : mainCommands) {
             if (userInputList.get(0).toLowerCase().equals(mainCommand)) {
                 return userInput;
