@@ -1,9 +1,7 @@
 package com.codecool.termlib;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+
 import com.codecool.termlib.Color;
 
 public class Terminal {
@@ -17,6 +15,7 @@ public class Terminal {
             x = sc.nextLine();
             List<String> myList = new ArrayList<String>(Arrays.asList(x.split(" ")));
 
+            myList.set(0, myList.get(0).toLowerCase());
             if (myList.get(0).equals("bgcolor")) {
                 String bgc = myList.get(1).toUpperCase();
                 Color myColor;
@@ -111,9 +110,61 @@ public class Terminal {
             else if (myList.get(0).equals("clr")) {
                 System.out.println("clearing screen");
                 clearScreen();
+            } else if (myList.get(0).equals("fgcolor")){
+
+                Color textColor;
+                String attribute = myList.get(1).toUpperCase();
+
+                switch (attribute){
+
+                    case "BLACK":
+                        textColor = Color.BLACK;
+                        setColor(textColor);
+                        break;
+                    case "RED":
+                        textColor = Color.RED;
+                        setColor(textColor);
+                        break;
+                    case "GREEN":
+                        textColor = Color.GREEN;
+                        setColor(textColor);
+                        break;
+                    case "YELLOW":
+                        textColor = Color.YELLOW;
+                        setColor(textColor);
+                        break;
+                    case "BLUE":
+                        textColor = Color.BLUE;
+                        setColor(textColor);
+                        break;
+                    case "MAGENTA":
+                        textColor = Color.MAGENTA;
+                        setColor(textColor);
+                        break;
+                    case "CYAN":
+                        textColor = Color.CYAN;
+                        setColor(textColor);
+                        break;
+                    case "WHITE":
+                        textColor = Color.WHITE;
+                        setColor(textColor);
+                        break;
+                    case "HELP":
+                        System.out.println("This command changes the foreground color of the text.");
+                        System.out.println("Example Usage: fgcolor RED -> changes the text color to red.");
+                        System.out.println("Supported colors are: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE");
+                    default:
+                        System.out.println(String.format("ERROR:The attribute %s is not a valid parameter for fgcolor function. Try fgcolor HELP for a detailed usage guide.", attribute));
+
+                }
+
+
             }
-            else {
-                System.out.println("you entered: " + x);
+            else if (myList.get(0).equals("quit")){
+                System.out.println("Goodbye...");
+            }
+            else{
+                System.out.println("ERROR: Command unrecognized");
             }
 
 
@@ -187,7 +238,46 @@ public class Terminal {
      *
      * @param color The color to set.
      */
-    public void setColor(Color color) {
+    public static void setColor(Color color) {
+        Map<String,String> colorCodesForeground = Map.ofEntries(
+                new AbstractMap.SimpleEntry<String,String>("BLACK", "30"+STYLE),
+                new AbstractMap.SimpleEntry<String,String>("RED", "31"+STYLE),
+                new AbstractMap.SimpleEntry<String,String>("GREEN", "32"+STYLE),
+                new AbstractMap.SimpleEntry<String,String>("YELLOW", "33"+STYLE),
+                new AbstractMap.SimpleEntry<String,String>("BLUE", "34"+STYLE),
+                new AbstractMap.SimpleEntry<String,String>("MAGENTA", "35"+STYLE),
+                new AbstractMap.SimpleEntry<String,String>("CYAN", "36"+STYLE),
+                new AbstractMap.SimpleEntry<String,String>("WHITE", "37"+STYLE)
+        );
+        switch (color) {
+            case BLACK:
+                System.out.print(CONTROL_CODE+colorCodesForeground.get("BLACK"));
+                break;
+            case RED:
+                System.out.print(CONTROL_CODE+colorCodesForeground.get("RED"));
+                break;
+            case GREEN:
+                System.out.print(CONTROL_CODE+colorCodesForeground.get("GREEN"));
+                break;
+            case YELLOW:
+                System.out.print(CONTROL_CODE+colorCodesForeground.get("YELLOW"));
+                break;
+            case BLUE:
+                System.out.print(CONTROL_CODE+colorCodesForeground.get("BLUE"));
+                break;
+            case MAGENTA:
+                System.out.print(CONTROL_CODE+colorCodesForeground.get("MAGENTA"));
+                break;
+            case CYAN:
+                System.out.print(CONTROL_CODE+colorCodesForeground.get("CYAN"));
+                break;
+            case WHITE:
+                System.out.print(CONTROL_CODE+colorCodesForeground.get("WHITE"));
+                break;
+
+
+        }
+
     }
 
     /**
