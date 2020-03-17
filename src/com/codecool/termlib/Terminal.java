@@ -69,10 +69,9 @@ public class Terminal {
                     case "UNDERSCORE":
                         setUnderline();
                         break;
-//                    case "BLINK":
-//                        myColor = Color.BLUE;
-//                        setBgColor(myColor);
-//                        break;
+                    case "BLINK":
+                        blink();
+                        break;
                     case "REVERSE":
                         reverse();
                         break;
@@ -361,6 +360,12 @@ public class Terminal {
         System.out.println("\033[8m");
     }
 
+    /**
+     * Creates a blinking effect.
+     */
+    public static void blink() {
+        System.out.print(CONTROL_CODE+"5"+STYLE);
+    }
     /**
      * Move the cursor relatively.
      *
