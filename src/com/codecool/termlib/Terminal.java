@@ -11,7 +11,8 @@ public class Terminal {
         Scanner sc = new Scanner(System.in);
 
         while (!x.equals("quit")) {
-            System.out.print("enter command: ");
+            System.out.println(" ---- TermLib ----");
+            System.out.print("Enter command: ");
             x = sc.nextLine();
             List<String> myList = new ArrayList<String>(Arrays.asList(x.split(" ")));
 
@@ -78,10 +79,9 @@ public class Terminal {
                     case "HIDDEN":
                         hide();
                         break;
-//                    case "RESET":
-//                        myColor = Color.BLACK;
-//                        setBgColor(myColor);
-//                        break;
+                    case "RESET":
+                        resetStyle();
+                        break;
                 }
             }
             else if (myList.get(0).equals("move")) {
@@ -161,6 +161,7 @@ public class Terminal {
 
             }
             else if (myList.get(0).equals("quit")){
+                clearScreen();
                 System.out.println("Goodbye...");
             }
             else{
@@ -202,7 +203,10 @@ public class Terminal {
      * Reset the color, background color, and any other style
      * (i.e.: underlined, dim, bright) to the terminal defaults.
      */
-    public void resetStyle() {
+    public static void resetStyle() {
+
+        System.out.print(CONTROL_CODE + 0 + STYLE);
+        clearScreen();
     }
 
     /**
@@ -212,10 +216,10 @@ public class Terminal {
      */
     public static void clearScreen() {
 //        System.out.println("\033[H\033[2J");
-        System.out.println(CONTROL_CODE);
-        System.out.println(CLEAR);
-        System.out.println(CONTROL_CODE);
-        System.out.println(MOVE);
+        System.out.print(CONTROL_CODE+CLEAR+CONTROL_CODE+MOVE);
+//        System.out.println(CLEAR);
+//        System.out.println(CONTROL_CODE);
+//        System.out.println(MOVE);
 
     }
 
@@ -277,6 +281,7 @@ public class Terminal {
 
 
         }
+        clearScreen();
 
     }
 
@@ -314,6 +319,7 @@ public class Terminal {
                 System.out.print("\033[47m");
                 break;
         }
+        clearScreen();
     }
 
     /**
