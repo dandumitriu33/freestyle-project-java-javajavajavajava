@@ -56,10 +56,35 @@ public class Validation {
                 break;
         }
         return "bgcolor INVALID";
-
     }
 
+    /**
+     * attribute command validation.
+     *
+     */
 
+    public static String validateCommandAttribute(List<String> userInputList) {
+        String attrib = userInputList.get(1).toUpperCase();
+        switch (attrib) {
+            case "BRIGHT":
+                return "attribute BRIGHT";
+            case "DIM":
+                return "attribute DIM";
+            case "UNDERSCORE":
+                return "attribute UNDERSCORE";
+            case "BLINK":
+                return "attribute BLINK";
+            case "REVERSE":
+                return "attribute REVERSE";
+            case "HIDDEN":
+                return "attribute HIDDEN";
+            case "RESET":
+                return "attribute RESET";
+            case "HELP":
+                return "attribute HELP";
+        }
+        return "attribute INVALID";
+    }
 
 
 

@@ -26,37 +26,8 @@ public class Terminal {
                 command(commandString);
             }
             else if (userInputList.get(0).equals("attribute")) {
-                String attrib = userInputList.get(1).toUpperCase();
-                switch (attrib) {
-                    case "BRIGHT":
-                        brighten();
-                        break;
-                    case "DIM":
-                        dim();
-                        break;
-                    case "UNDERSCORE":
-                        setUnderline();
-                        break;
-                    case "BLINK":
-                        blink();
-                        break;
-                    case "REVERSE":
-                        reverse();
-                        break;
-                    case "HIDDEN":
-                        hide();
-                        break;
-                    case "RESET":
-                        resetStyle();
-                        break;
-                    case "HELP":
-                        System.out.println("** Set a text attribute by typing: attribute <attribute>");
-                        System.out.println("** Example attribute bright");
-                        System.out.println("** Choose from: bright, dim, underscore, blink, reverse, hidden, reset");
-                        break;
-                    default:
-                        System.out.println("Invalid parameter. Please type attribute help for more details.");
-                }
+                commandString = Validation.validateCommandAttribute(userInputList);
+                command(commandString);
             }
             else if (userInputList.get(0).equals("move")) {
                 String dir = userInputList.get(1).toUpperCase();
@@ -148,8 +119,6 @@ public class Terminal {
                         System.out.println(String.format("ERROR:The attribute %s is not a valid parameter for fgcolor function. Try fgcolor HELP for a detailed usage guide.", attribute));
 
                 }
-
-
             }
             else if (userInputList.get(0).equals("quit")){
                 clearScreen();
@@ -242,12 +211,7 @@ public class Terminal {
      * Might reset cursor position.
      */
     public static void clearScreen() {
-//        System.out.println("\033[H\033[2J");
         System.out.print(CONTROL_CODE+CLEAR+CONTROL_CODE+MOVE);
-//        System.out.println(CLEAR);
-//        System.out.println(CONTROL_CODE);
-//        System.out.println(MOVE);
-
     }
 
     /**
@@ -262,8 +226,6 @@ public class Terminal {
     public static void moveTo(Integer x, Integer y) {
         System.out.print(CONTROL_CODE+x+';'+y+'f');
     }
-
-
 
     /**
      * Set the foreground printing color.
@@ -432,6 +394,16 @@ public class Terminal {
     }
 
     /**
+     * Displays help info for the attribute command.
+     */
+
+    public static void helpAttribute() {
+        System.out.println("** Set a text attribute by typing: attribute <attribute>");
+        System.out.println("** Example attribute bright");
+        System.out.println("** Choose from: bright, dim, underscore, blink, reverse, hidden, reset");
+    }
+
+    /**
      * Set the character displayed under the current cursor position.
      *
      * The actual cursor position after calling this method is the
@@ -469,6 +441,21 @@ public class Terminal {
                 System.out.println("Invalid parameter. Please type bgcolor help for more details.");
             };
         }
-
+        else if (commandString.substring(0, 9).equals("attribute")) {
+            if (commandString.substring(10).equals("BRIGHT")) brighten();
+            else if (commandString.substring(10).equals("DIM")) dim();
+            else if (commandString.substring(10).equals("UNDERSCORE")) setUnderline();
+            else if (commandString.substring(10).equals("BLINK")) blink();
+            else if (commandString.substring(10).equals("REVERSE")) reverse();
+            else if (commandString.substring(10).equals("HIDDEN")) hide();
+            else if (commandString.substring(10).equals("RESET")) resetStyle();
+            else if (commandString.substring(10).equals("HELP")) helpAttribute();
+            else {
+                System.out.println("Invalid parameter. Please type attribute help for more details.");
+            };
+        }
     }
+
+
+
 }
