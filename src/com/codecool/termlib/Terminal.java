@@ -1,9 +1,7 @@
 package com.codecool.termlib;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+
 import com.codecool.termlib.Color;
 
 public class Terminal {
@@ -13,10 +11,12 @@ public class Terminal {
         Scanner sc = new Scanner(System.in);
 
         while (!x.equals("quit")) {
-            System.out.print("enter command: ");
+//            System.out.println(" ---- TermLib ----");
+//            System.out.print("Enter command: ");
             x = sc.nextLine();
             List<String> myList = new ArrayList<String>(Arrays.asList(x.split(" ")));
 
+            myList.set(0, myList.get(0).toLowerCase());
             if (myList.get(0).equals("bgcolor")) {
                 String bgc = myList.get(1).toUpperCase();
                 Color myColor;
@@ -69,20 +69,18 @@ public class Terminal {
                     case "UNDERSCORE":
                         setUnderline();
                         break;
-//                    case "BLINK":
-//                        myColor = Color.BLUE;
-//                        setBgColor(myColor);
-//                        break;
+                    case "BLINK":
+                        blink();
+                        break;
                     case "REVERSE":
                         reverse();
                         break;
                     case "HIDDEN":
                         hide();
                         break;
-//                    case "RESET":
-//                        myColor = Color.BLACK;
-//                        setBgColor(myColor);
-//                        break;
+                    case "RESET":
+                        resetStyle();
+                        break;
                 }
             }
             else if (myList.get(0).equals("move")) {
@@ -111,9 +109,69 @@ public class Terminal {
             else if (myList.get(0).equals("clr")) {
                 System.out.println("clearing screen");
                 clearScreen();
+            } else if (myList.get(0).equals("fgcolor")){
+
+                Color textColor;
+                String attribute = myList.get(1).toUpperCase();
+
+                switch (attribute){
+
+                    case "BLACK":
+                        textColor = Color.BLACK;
+                        setColor(textColor);
+                        break;
+                    case "RED":
+                        textColor = Color.RED;
+                        setColor(textColor);
+                        break;
+                    case "GREEN":
+                        textColor = Color.GREEN;
+                        setColor(textColor);
+                        break;
+                    case "YELLOW":
+                        textColor = Color.YELLOW;
+                        setColor(textColor);
+                        break;
+                    case "BLUE":
+                        textColor = Color.BLUE;
+                        setColor(textColor);
+                        break;
+                    case "MAGENTA":
+                        textColor = Color.MAGENTA;
+                        setColor(textColor);
+                        break;
+                    case "CYAN":
+                        textColor = Color.CYAN;
+                        setColor(textColor);
+                        break;
+                    case "WHITE":
+                        textColor = Color.WHITE;
+                        setColor(textColor);
+                        break;
+                    case "HELP":
+                        System.out.println("This command changes the foreground color of the text.");
+                        System.out.println("Example Usage: fgcolor RED -> changes the text color to red.");
+                        System.out.println("Supported colors are: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE");
+                    default:
+                        System.out.println(String.format("ERROR:The attribute %s is not a valid parameter for fgcolor function. Try fgcolor HELP for a detailed usage guide.", attribute));
+
+                }
+
+
             }
-            else {
-                System.out.println("you entered: " + x);
+            else if (myList.get(0).equals("quit")){
+                clearScreen();
+                System.out.println("Goodbye...");
+            }
+            else if (myList.get(0).equals("movecursor")){
+                if (myList.size() < 3)
+                {
+                    System.out.println("ERROR: Unsuitable number of attributes");
+                }
+            }
+            else{
+                System.out.println("ERROR: Command unrecognized");
+                System.out.println("ᛤᛤ");
             }
 
 
@@ -151,7 +209,10 @@ public class Terminal {
      * Reset the color, background color, and any other style
      * (i.e.: underlined, dim, bright) to the terminal defaults.
      */
-    public void resetStyle() {
+    public static void resetStyle() {
+
+        System.out.print(CONTROL_CODE + 0 + STYLE);
+        clearScreen();
     }
 
     /**
@@ -161,10 +222,10 @@ public class Terminal {
      */
     public static void clearScreen() {
 //        System.out.println("\033[H\033[2J");
-        System.out.println(CONTROL_CODE);
-        System.out.println(CLEAR);
-        System.out.println(CONTROL_CODE);
-        System.out.println(MOVE);
+        System.out.print(CONTROL_CODE+CLEAR+CONTROL_CODE+MOVE);
+//        System.out.println(CLEAR);
+//        System.out.println(CONTROL_CODE);
+//        System.out.println(MOVE);
 
     }
 
@@ -178,6 +239,7 @@ public class Terminal {
      * @param y Row number.
      */
     public void moveTo(Integer x, Integer y) {
+
     }
 
     /**
@@ -187,7 +249,47 @@ public class Terminal {
      *
      * @param color The color to set.
      */
-    public void setColor(Color color) {
+    public static void setColor(Color color) {
+        Map<String,String> colorCodesForeground = Map.ofEntries(
+                new AbstractMap.SimpleEntry<String,String>("BLACK", "30"+STYLE),
+                new AbstractMap.SimpleEntry<String,String>("RED", "31"+STYLE),
+                new AbstractMap.SimpleEntry<String,String>("GREEN", "32"+STYLE),
+                new AbstractMap.SimpleEntry<String,String>("YELLOW", "33"+STYLE),
+                new AbstractMap.SimpleEntry<String,String>("BLUE", "34"+STYLE),
+                new AbstractMap.SimpleEntry<String,String>("MAGENTA", "35"+STYLE),
+                new AbstractMap.SimpleEntry<String,String>("CYAN", "36"+STYLE),
+                new AbstractMap.SimpleEntry<String,String>("WHITE", "37"+STYLE)
+        );
+        switch (color) {
+            case BLACK:
+                System.out.print(CONTROL_CODE+colorCodesForeground.get("BLACK"));
+                break;
+            case RED:
+                System.out.print(CONTROL_CODE+colorCodesForeground.get("RED"));
+                break;
+            case GREEN:
+                System.out.print(CONTROL_CODE+colorCodesForeground.get("GREEN"));
+                break;
+            case YELLOW:
+                System.out.print(CONTROL_CODE+colorCodesForeground.get("YELLOW"));
+                break;
+            case BLUE:
+                System.out.print(CONTROL_CODE+colorCodesForeground.get("BLUE"));
+                break;
+            case MAGENTA:
+                System.out.print(CONTROL_CODE+colorCodesForeground.get("MAGENTA"));
+                break;
+            case CYAN:
+                System.out.print(CONTROL_CODE+colorCodesForeground.get("CYAN"));
+                break;
+            case WHITE:
+                System.out.print(CONTROL_CODE+colorCodesForeground.get("WHITE"));
+                break;
+
+
+        }
+        clearScreen();
+
     }
 
     /**
@@ -224,6 +326,7 @@ public class Terminal {
                 System.out.print("\033[47m");
                 break;
         }
+        clearScreen();
     }
 
     /**
@@ -265,6 +368,12 @@ public class Terminal {
         System.out.println("\033[8m");
     }
 
+    /**
+     * Creates a blinking effect.
+     */
+    public static void blink() {
+        System.out.print(CONTROL_CODE+"5"+STYLE);
+    }
     /**
      * Move the cursor relatively.
      *
