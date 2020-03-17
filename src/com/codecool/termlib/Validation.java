@@ -17,7 +17,7 @@ public class Validation {
 
     public static String userInputValidation(String userInput) {
         List<String> userInputList = new ArrayList<String>(Arrays.asList(userInput.split(" ")));
-        String[] mainCommands = {"bgcolor", "fgcolor", "attribute", "move", "movecursor", "clear", "quit", "help"};
+        String[] mainCommands = {"bgcolor", "fgcolor", "attribute", "move", "movecursor", "clear", "glyph", "quit", "help"};
         if (userInputList.get(0).equals("quit") && userInputList.size()>1) {
             return "help required";
         }
@@ -116,5 +116,24 @@ public class Validation {
             return false;
         }
     }
+
+    /**
+     * glyph command validation
+     */
+    public static String validateCommandGlyph (String userInput) {
+        List<String> userInputList = new ArrayList<String>(Arrays.asList(userInput.split(" ")));
+        if  (userInputList.size()==2 && userInputList.get(1).toLowerCase().equals("help")) {
+            return "glyph HELP";
+        }
+        else if (userInputList.size() != 4) return "glyph INVALID";
+        if (validatePositiveInteger(userInputList.get(2)) && validatePositiveInteger(userInputList.get(3))) {
+            return userInput;
+        }
+        else {
+            return "glyph INVALID";
+        }
+    }
+
+
 
 }

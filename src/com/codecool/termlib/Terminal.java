@@ -130,10 +130,8 @@ public class Terminal {
                 }
             }
             else if(userInputList.get(0).equals("glyph")){
-                char symbol = userInputList.get(1).charAt(0);
-                int posX = Integer.parseInt(userInputList.get(2));
-                int posY = Integer.parseInt(userInputList.get(3));
-                setChar(symbol, posX, posY);
+                commandString = Validation.validateCommandGlyph(userInput);
+                command(commandString);
             }
             else if(userInputList.get(0).equals("help")) {
                 help();
@@ -361,7 +359,7 @@ public class Terminal {
         System.out.println("** Please type: <command> help for each command details.");
         System.out.println("** Available commands: bgcolor, fgcolor, move, movecursor, ");
         System.out.println("** attribute bright|dim|underscore|blink|hidden|reset|reverse,");
-        System.out.println("** clear, quit.");
+        System.out.println("** glyph, clear, quit.");
     }
 
     /**
@@ -382,6 +380,16 @@ public class Terminal {
         System.out.println("** Distance parameter must be a positive integer (1, 2, 4, 30, 529).");
         System.out.println("** Choose from up, down, forward, backward. If parameters are too large, the cursor might be offscreen.");
     }
+
+    /**
+     * Displays help info for the glyph command.
+     */
+    public static void helpGlyph() {
+        System.out.println("** Moves the cursor on the screen, to the given position and changes the character there to the glyph.");
+        System.out.println("** Example: glyph @ 12 50");
+        System.out.println("** The glyph character can be anything except empty space ' '. Coordinates must be positive integers.");
+    }
+
 
 
     /**
@@ -414,6 +422,7 @@ public class Terminal {
      * @param commandString The unique part of a command sequence.
      */
     private static void command(String commandString) {
+        //bgcolor command
         if (commandString.substring(0, 7).equals("bgcolor")) {
             try {
                 setBgColor(Color.valueOf(commandString.substring(8)));
@@ -422,6 +431,7 @@ public class Terminal {
                 System.out.println("Invalid parameter. Please type bgcolor help for more details.");
             };
         }
+        //attribute command
         else if (commandString.substring(0, 9).equals("attribute")) {
             if (commandString.substring(10).equals("BRIGHT")) brighten();
             else if (commandString.substring(10).equals("DIM")) dim();
@@ -435,6 +445,7 @@ public class Terminal {
                 System.out.println("Invalid parameter. Please type attribute help for more details.");
             }
         }
+        //move command
         else if (commandString.substring(0, 4).toLowerCase().equals("move")) {
             List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
             if (userInputList.get(1).toUpperCase().equals("UP")) {
@@ -455,6 +466,22 @@ public class Terminal {
             else {
                 System.out.println("Invalid parameter. Please type move help for more details.");
             }
+        }
+        // glyph command
+        else if (commandString.substring(0, 5).toLowerCase().equals("glyph")) {
+            List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
+            if (userInputList.get(1).toLowerCase().equals("help")) {
+                helpGlyph();
+            } else if (userInputList.get(1).toLowerCase().equals("invalid")) {
+                System.out.println("Invalid parameter. Please type glyph help for more details.");
+            }
+            else {
+                char symbol = userInputList.get(1).charAt(0);
+                int positionX = Integer.parseInt(userInputList.get(2));
+                int positionY = Integer.parseInt(userInputList.get(3));
+                setChar(symbol, positionX, positionY);
+            }
+
         }
 
 
