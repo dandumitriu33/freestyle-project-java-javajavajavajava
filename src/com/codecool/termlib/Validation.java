@@ -89,7 +89,32 @@ public class Validation {
         return "attribute INVALID";
     }
 
+    /**
+     * move command validation
+     * @param userInput
+     */
+    public static String validateCommandMove(String userInput) {
+        List<String> userInputList = new ArrayList<String>(Arrays.asList(userInput.split(" ")));
+        if (userInputList.size()>3) return "move INVALID";
+        if (userInputList.get(1).toUpperCase().equals("UP") && validatePositiveInteger(userInputList.get(2))) return userInput;
+        else if (userInputList.get(1).toUpperCase().equals("DOWN") && validatePositiveInteger(userInputList.get(2))) return userInput;
+        else if (userInputList.get(1).toUpperCase().equals("FORWARD") && validatePositiveInteger(userInputList.get(2))) return userInput;
+        else if (userInputList.get(1).toUpperCase().equals("BACKWARD") && validatePositiveInteger(userInputList.get(2))) return userInput;
+        else if (userInputList.get(1).toUpperCase().equals("HELP")) return "move HELP";
+        else return "move INVALID";
+    }
 
-
+    /**
+     * validates a positive integer (coming in as a string)
+     */
+    public static boolean validatePositiveInteger(String number) {
+        try {
+            int temp = Integer.parseInt(number);
+            return temp > 0;
+        }
+        catch(Exception e) {
+            return false;
+        }
+    }
 
 }
