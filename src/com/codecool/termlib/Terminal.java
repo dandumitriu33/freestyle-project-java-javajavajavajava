@@ -165,6 +165,7 @@ public class Terminal {
             }
             else{
                 System.out.println("ERROR: Command unrecognized");
+                System.out.println("ᛤᛤ");
             }
 
 
@@ -232,6 +233,7 @@ public class Terminal {
      * @param y Row number.
      */
     public void moveTo(Integer x, Integer y) {
+
     }
 
     /**
