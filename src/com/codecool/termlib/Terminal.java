@@ -1,5 +1,6 @@
 package com.codecool.termlib;
 
+import java.awt.event.KeyEvent;
 import java.util.*;
 
 import com.codecool.termlib.Color;
@@ -11,10 +12,11 @@ public class Terminal {
         Scanner sc = new Scanner(System.in);
 
         while (!x.equals("quit")) {
-//            System.out.println(" ---- TermLib ----");
-//            System.out.print("Enter command: ");
+//            System.out.print(" ---- TermLib ----");
+            System.out.print(">");
             x = sc.nextLine();
             List<String> myList = new ArrayList<String>(Arrays.asList(x.split(" ")));
+
 
             myList.set(0, myList.get(0).toLowerCase());
             if (myList.get(0).equals("bgcolor")) {
@@ -111,6 +113,11 @@ public class Terminal {
                 clearScreen();
             } else if (myList.get(0).equals("fgcolor")){
 
+                if (myList.size() < 2)
+                {
+                    myList.add(1,"White");
+                }
+
                 Color textColor;
                 String attribute = myList.get(1).toUpperCase();
 
@@ -166,12 +173,46 @@ public class Terminal {
             else if (myList.get(0).equals("movecursor")){
                 if (myList.size() < 3)
                 {
-                    System.out.println("ERROR: Unsuitable number of attributes");
+                    if(myList.size() == 2)
+                    {
+                        String helper = myList.get(1);
+                        helper = helper.toUpperCase();
+                        if (helper.equals("HELP")){
+                            System.out.println("This function takes two integer arguments and moves the cursor to the specified position on the screen.");
+                            System.out.println("Example Usage: movecursor 12 50");
+                        }
+                        else {
+                            System.out.println("ERROR: Unsuitable number of attributes, use {command} help to get more info.");
+                        }
+                    }
+                    else {
+                        System.out.println("ERROR: Unsuitable number of attributes, use {command} help to get more info.");
+                    }
                 }
+                else {
+                    String possibleWrong = null;
+                    try {
+                        possibleWrong = myList.get(1);
+                        int arg1 = Integer.parseInt(myList.get(1));
+                        possibleWrong = myList.get(2);
+                        int arg2 = Integer.parseInt(myList.get(2));
+                        moveTo(arg1, arg2);
+                    } catch (Exception NumberFormatException) {
+                        System.out.println(String.format("Argument %s is of unsuitable type, please use only integers for this operation or consult the help command.", possibleWrong));
+                    }
+                }
+            }
+            else if(myList.get(0).equals("glyph")){
+
+
+                char symbol = myList.get(1).charAt(0);
+                int posX = Integer.parseInt(myList.get(2));
+                int posY = Integer.parseInt(myList.get(3));
+
+                setChar(symbol, posX, posY);
             }
             else{
                 System.out.println("ERROR: Command unrecognized");
-                System.out.println("ᛤᛤ");
             }
 
 
@@ -238,9 +279,18 @@ public class Terminal {
      * @param x Column number.
      * @param y Row number.
      */
-    public void moveTo(Integer x, Integer y) {
+    public static void moveTo(Integer x, Integer y) {
+        System.out.print(CONTROL_CODE+x+';'+y+'f');
+        //System.out.print("\033 [65;81p");
 
+//        System.out.print("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+//        System.out.print(CONTROL_CODE+(x+0)+ ';' + (y+10)+'f' );
+//        System.out.print("\033[47;30m");
+//        System.out.print("a");
+//        System.out.print("\033[H");
     }
+
+
 
     /**
      * Set the foreground printing color.
@@ -288,7 +338,7 @@ public class Terminal {
 
 
         }
-        clearScreen();
+
 
     }
 
@@ -326,7 +376,6 @@ public class Terminal {
                 System.out.print("\033[47m");
                 break;
         }
-        clearScreen();
     }
 
     /**
@@ -399,6 +448,7 @@ public class Terminal {
                 break;
         }
 
+
     }
 
     /**
@@ -411,7 +461,16 @@ public class Terminal {
      * @param c the literal character to set for the current cursor
      * position.
      */
-    public void setChar(char c) {
+    public static void setChar(char c, int x, int y) {
+
+        //save cursor position
+        System.out.print("\0337");
+        //move to position
+        moveTo(x,y);
+        //modify character
+        System.out.print(c);
+        //return to initial position
+        System.out.print("\0338");
     }
 
     /**
