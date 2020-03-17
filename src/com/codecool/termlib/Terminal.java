@@ -11,6 +11,7 @@ public class Terminal {
     public static void main(String[] args) {
         String userInput ="";
         String validatedUserInput = "";
+        String commandString = "";
         Scanner sc = new Scanner(System.in);
         while (!userInput.equals("quit")) {
             System.out.print(">");
@@ -21,113 +22,16 @@ public class Terminal {
                 System.out.println("Invalid command. Please type help for more info.");;
             }
             else if (userInputList.get(0).toLowerCase().equals("bgcolor")) {
-                String bgc = userInputList.get(1).toUpperCase();
-                Color myColor;
-                switch(bgc) {
-                    case "RED":
-                        myColor = Color.RED;
-                        setBgColor(myColor);
-                        break;
-                    case "GREEN":
-                        myColor = Color.GREEN;
-                        setBgColor(myColor);
-                        break;
-                    case "YELLOW":
-                        myColor = Color.YELLOW;
-                        setBgColor(myColor);
-                        break;
-                    case "BLUE":
-                        myColor = Color.BLUE;
-                        setBgColor(myColor);
-                        break;
-                    case "MAGENTA":
-                        myColor = Color.MAGENTA;
-                        setBgColor(myColor);
-                        break;
-                    case "CYAN":
-                        myColor = Color.CYAN;
-                        setBgColor(myColor);
-                        break;
-                    case "BLACK":
-                        myColor = Color.BLACK;
-                        setBgColor(myColor);
-                        break;
-                    case "WHITE":
-                        myColor = Color.WHITE;
-                        setBgColor(myColor);
-                        break;
-                    case "HELP":
-                        System.out.println("** Set a background color by typing: bgcolor <color>");
-                        System.out.println("** Example: bgcolor red");
-                        System.out.println("** Choose from: red, green, blue, yellow, cyan, magenta, black, white");
-                        break;
-                    default:
-                        System.out.println("Invalid parameter. Please type bgcolor help for more details.");
-                }
-
+                commandString = Validation.validateCommandBgcolor(userInputList);
+                command(commandString);
             }
             else if (userInputList.get(0).equals("attribute")) {
-                String attrib = userInputList.get(1).toUpperCase();
-                switch (attrib) {
-                    case "BRIGHT":
-                        brighten();
-                        break;
-                    case "DIM":
-                        dim();
-                        break;
-                    case "UNDERSCORE":
-                        setUnderline();
-                        break;
-                    case "BLINK":
-                        blink();
-                        break;
-                    case "REVERSE":
-                        reverse();
-                        break;
-                    case "HIDDEN":
-                        hide();
-                        break;
-                    case "RESET":
-                        resetStyle();
-                        break;
-                    case "HELP":
-                        System.out.println("** Set a text attribute by typing: attribute <attribute>");
-                        System.out.println("** Example attribute bright");
-                        System.out.println("** Choose from: bright, dim, underscore, blink, reverse, hidden, reset");
-                        break;
-                    default:
-                        System.out.println("Invalid parameter. Please type attribute help for more details.");
-                }
+                commandString = Validation.validateCommandAttribute(userInputList);
+                command(commandString);
             }
             else if (userInputList.get(0).equals("move")) {
-                String dir = userInputList.get(1).toUpperCase();
-                int amount;
-                switch(dir) {
-                    case "UP":
-                        amount = Integer.parseInt(userInputList.get(2));
-                        moveCursor(Direction.UP, amount);
-                        break;
-                    case "DOWN":
-                        amount = Integer.parseInt(userInputList.get(2));
-                        moveCursor(Direction.DOWN, amount);
-                        break;
-                    case "FORWARD":
-                        amount = Integer.parseInt(userInputList.get(2));
-                        moveCursor(Direction.FORWARD, amount);
-                        break;
-                    case "BACKWARD":
-                        amount = Integer.parseInt(userInputList.get(2));
-                        moveCursor(Direction.BACKWARD, amount);
-                        break;
-                    case "HELP":
-                        System.out.println("** Move the cursor on the screen, relative to the current position.");
-                        System.out.println("** Example: move up 4 (will move the cursor up 4 lines and 1 down for typing)");
-                        System.out.println("** Distance parameter must be a positive integer (1, 2, 4, 30, 529).");
-                        System.out.println("** Choose from up, down, forward, backward. If parameters are too large, the cursor might be offscreen.");
-                        break;
-                    default :
-                        System.out.println("Invalid parameter. Please type move help for more details.");
-                }
+                commandString = Validation.validateCommandMove(userInput);
+                command(commandString);
             }
             else if (userInputList.get(0).equals("clear")) {
                 if (userInputList.size()>1 && userInputList.get(1).toUpperCase().equals("HELP")) {
@@ -189,11 +93,9 @@ public class Terminal {
                         System.out.println(String.format("ERROR:The attribute %s is not a valid parameter for fgcolor function. Try fgcolor HELP for a detailed usage guide.", attribute));
 
                 }
-
-
             }
-            else if (userInputList.get(0).equals("quit")){
-                clearScreen();
+            else if (userInputList.get(0).equals("quit") && userInputList.size()==1){
+                break;
             }
             else if (userInputList.get(0).equals("movecursor")){
                 if (userInputList.size() < 3)
@@ -283,12 +185,7 @@ public class Terminal {
      * Might reset cursor position.
      */
     public static void clearScreen() {
-//        System.out.println("\033[H\033[2J");
         System.out.print(CONTROL_CODE+CLEAR+CONTROL_CODE+MOVE);
-//        System.out.println(CLEAR);
-//        System.out.println(CONTROL_CODE);
-//        System.out.println(MOVE);
-
     }
 
     /**
@@ -303,8 +200,6 @@ public class Terminal {
     public static void moveTo(Integer x, Integer y) {
         System.out.print(CONTROL_CODE+x+';'+y+'f');
     }
-
-
 
     /**
      * Set the foreground printing color.
@@ -457,20 +352,37 @@ public class Terminal {
                 System.out.print("\033[" + amount + "D");
                 break;
         }
-
-
     }
 
     /**
      * Displays information on commands, syntax mainly.
      */
-
     public static void help() {
         System.out.println("** Please type: <command> help for each command details.");
         System.out.println("** Available commands: bgcolor, fgcolor, move, movecursor, ");
         System.out.println("** attribute bright|dim|underscore|blink|hidden|reset|reverse,");
         System.out.println("** clear, quit.");
     }
+
+    /**
+     * Displays help info for the attribute command.
+     */
+    public static void helpAttribute() {
+        System.out.println("** Set a text attribute by typing: attribute <attribute>");
+        System.out.println("** Example attribute bright");
+        System.out.println("** Choose from: bright, dim, underscore, blink, reverse, hidden, reset");
+    }
+
+    /**
+     * Displays help info for the move command.
+     */
+    public static void helpMove() {
+        System.out.println("** Move the cursor on the screen, relative to the current position.");
+        System.out.println("** Example: move up 4 (will move the cursor up 4 lines and 1 down for typing)");
+        System.out.println("** Distance parameter must be a positive integer (1, 2, 4, 30, 529).");
+        System.out.println("** Choose from up, down, forward, backward. If parameters are too large, the cursor might be offscreen.");
+    }
+
 
     /**
      * Set the character displayed under the current cursor position.
@@ -501,6 +413,55 @@ public class Terminal {
      *
      * @param commandString The unique part of a command sequence.
      */
-    private void command(String commandString) {
+    private static void command(String commandString) {
+        if (commandString.substring(0, 7).equals("bgcolor")) {
+            try {
+                setBgColor(Color.valueOf(commandString.substring(8)));
+            }
+            catch (Exception e){
+                System.out.println("Invalid parameter. Please type bgcolor help for more details.");
+            };
+        }
+        else if (commandString.substring(0, 9).equals("attribute")) {
+            if (commandString.substring(10).equals("BRIGHT")) brighten();
+            else if (commandString.substring(10).equals("DIM")) dim();
+            else if (commandString.substring(10).equals("UNDERSCORE")) setUnderline();
+            else if (commandString.substring(10).equals("BLINK")) blink();
+            else if (commandString.substring(10).equals("REVERSE")) reverse();
+            else if (commandString.substring(10).equals("HIDDEN")) hide();
+            else if (commandString.substring(10).equals("RESET")) resetStyle();
+            else if (commandString.substring(10).equals("HELP")) helpAttribute();
+            else {
+                System.out.println("Invalid parameter. Please type attribute help for more details.");
+            }
+        }
+        else if (commandString.substring(0, 4).toLowerCase().equals("move")) {
+            List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
+            if (userInputList.get(1).toUpperCase().equals("UP")) {
+                moveCursor(Direction.UP, Integer.parseInt(userInputList.get(2)));
+            }
+            else if (userInputList.get(1).toUpperCase().equals("DOWN")) {
+                moveCursor(Direction.DOWN, Integer.parseInt(userInputList.get(2)));
+            }
+            else if (userInputList.get(1).toUpperCase().equals("FORWARD")) {
+                moveCursor(Direction.FORWARD, Integer.parseInt(userInputList.get(2)));
+            }
+            else if (userInputList.get(1).toUpperCase().equals("BACKWARD")) {
+                moveCursor(Direction.BACKWARD, Integer.parseInt(userInputList.get(2)));
+            }
+            else if (userInputList.get(1).toUpperCase().equals("HELP")) {
+                helpMove();
+            }
+            else {
+                System.out.println("Invalid parameter. Please type move help for more details.");
+            }
+        }
+
+
+
+
     }
+
+
+
 }
