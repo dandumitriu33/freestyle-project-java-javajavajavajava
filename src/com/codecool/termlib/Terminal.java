@@ -11,8 +11,8 @@ public class Terminal {
         Scanner sc = new Scanner(System.in);
 
         while (!x.equals("quit")) {
-            System.out.println(" ---- TermLib ----");
-            System.out.print("Enter command: ");
+//            System.out.println(" ---- TermLib ----");
+//            System.out.print("Enter command: ");
             x = sc.nextLine();
             List<String> myList = new ArrayList<String>(Arrays.asList(x.split(" ")));
 
@@ -162,6 +162,12 @@ public class Terminal {
             else if (myList.get(0).equals("quit")){
                 clearScreen();
                 System.out.println("Goodbye...");
+            }
+            else if (myList.get(0).equals("movecursor")){
+                if (myList.size() < 3)
+                {
+                    System.out.println("ERROR: Unsuitable number of attributes");
+                }
             }
             else{
                 System.out.println("ERROR: Command unrecognized");
