@@ -134,6 +134,33 @@ public class Validation {
         }
     }
 
+    /**
+     * clock command validation
+     */
+    public static String validateCommandClock (String userInput) {
+        List<String> userInputList = new ArrayList<String>(Arrays.asList(userInput.split(" ")));
+        if (userInputList.size() == 1 && userInputList.get(0).toLowerCase().equals("clock")) {
+//            userInputList.add(1, "default");
+//            String parameter = userInputList.get(1);
+//            commandHistory.add(userInputList.get(0));
+//            clock(parameter);
+            return "clock DEFAULT";
 
+        }
+        else if(userInputList.size() >= 2 && userInputList.get(0).toLowerCase().equals("clock")) {
+            String[] possibleArgs = new String[] {"NYC", "HKG", "LON", "HELP"};
+            String parameter = userInputList.get(1).toUpperCase();
+            if (!Arrays.stream(possibleArgs).anyMatch(parameter::equals))
+            {
+               return "clock DEFAULT";
+            }
+            else
+            {
+                return userInputList.get(0).toLowerCase() + " " + userInputList.get(1).toUpperCase();
+            }
+        }
+        return "clock DEFAULT";
+
+    }
 
 }

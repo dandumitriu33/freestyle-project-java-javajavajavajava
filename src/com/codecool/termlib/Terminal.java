@@ -10,6 +10,8 @@ import com.codecool.termlib.Validation;
 
 import com.codecool.termlib.Color;
 
+import javax.swing.plaf.synth.SynthOptionPaneUI;
+
 public class Terminal {
 
     public static void main(String[] args) {
@@ -201,29 +203,10 @@ public class Terminal {
 
                 }
             }
-            else if (userInputList.get(0).equals("clock"))
-            {
-                if (userInputList.size() < 2)
-                {
-                    userInputList.add(1, "default");
-                    String parameter = userInputList.get(1);
-                    commandHistory.add(userInputList.get(0));
-                    clock(parameter);
-
-                } else {
-                    String parameter = userInputList.get(1);
-                    parameter = parameter.toUpperCase();
-                    String[] possibleArgs = new String[] {"NYC", "HKG", "LON", "HELP"};
-                    if (!Arrays.stream(possibleArgs).anyMatch(parameter::equals))
-                    {
-                        commandHistory.add(userInputList.get(0));
-                    }
-                    else
-                    {
-                        commandHistory.add(userInputList.get(0) + " " + parameter);
-                    }
-                    clock(parameter);
-                }
+            else if (userInputList.get(0).toLowerCase().equals("clock")) {
+                commandString = Validation.validateCommandClock(userInput);
+                command(commandString);
+                commandHistory.add(commandString);
             }
             else{
                 System.out.println("ERROR: Command unrecognized. Type help for more info.");
@@ -479,6 +462,14 @@ public class Terminal {
         System.out.println("** The glyph character can be anything except empty space ' '. Coordinates must be positive integers.");
     }
 
+    /**
+     * Displays help info for the clock command.
+     */
+    public static void helpClock() {
+        System.out.println("** This command returns the current date and time.");
+        System.out.println("** Example Usage: clock {parameter}");
+        System.out.println("** Supported parameters are: HKG, NYC, LON");
+    }
 
 
     /**
@@ -575,6 +566,16 @@ public class Terminal {
 
         }
 
+        // clock command
+        else if(commandString.substring(0, 5).toLowerCase().equals("clock")) {
+            List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
+            if (userInputList.get(1).toUpperCase().equals("DEFAULT")) {
+                clock("DEFAULT");
+            } else {
+                clock(userInputList.get(1).toUpperCase());
+            }
+        }
+
 
 
 
@@ -643,9 +644,7 @@ public class Terminal {
                 System.out.println(String.format("Current time in New York City: %s", currentClockFormatted.format(currentClock)));
                 break;
             case "HELP":
-                System.out.println("** This command returns the current date and time.");
-                System.out.println("** Example Usage: clock {parameter}");
-                System.out.println("** Supported parameters are: HKG, NYC, LON");
+                helpClock();
                 break;
             default:
                 currentClockFormatted.setTimeZone(TimeZone.getDefault());
