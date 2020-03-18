@@ -34,6 +34,7 @@ public class Validation {
      */
 
     public static String validateCommandBgcolor(List<String> userInputList) {
+        if (userInputList.size()!=2) return "bgcolor INVALID";
         String bgc = userInputList.get(1).toUpperCase();
         switch(bgc) {
             case "RED":
@@ -53,9 +54,6 @@ public class Validation {
             case "WHITE":
                 return "bgcolor WHITE";
             case "HELP":
-                System.out.println("** Set a background color by typing: bgcolor <color>");
-                System.out.println("** Example: bgcolor red");
-                System.out.println("** Choose from: red, green, blue, yellow, cyan, magenta, black, white");
                 return "bgcolor HELP";
         }
         return "bgcolor INVALID";

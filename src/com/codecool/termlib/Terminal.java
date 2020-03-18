@@ -319,6 +319,15 @@ public class Terminal {
     }
 
     /**
+     * Displays help info for the bgcolor command.
+     */
+    public static void helpBgcolor() {
+        System.out.println("** Set a background color by typing: bgcolor <color>");
+        System.out.println("** Example: bgcolor red");
+        System.out.println("** Choose from: red, green, blue, yellow, cyan, magenta, black, white");
+    }
+
+    /**
      * Displays help info for the attribute command.
      */
     public static void helpAttribute() {
@@ -423,13 +432,15 @@ public class Terminal {
         List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
         // bgcolor command
         if (userInputList.get(0).toLowerCase().equals("bgcolor")) {
-            try {
-                commandHistory.add(String.format("bgcolor %s",Color.valueOf(commandString.substring(8)) ));
-                setBgColor(Color.valueOf(commandString.substring(8)));
+            if (userInputList.get(1).toUpperCase().equals("HELP")) helpBgcolor();
+            else {
+                try {
+                    commandHistory.add(String.format("bgcolor %s", Color.valueOf(commandString.substring(8))));
+                    setBgColor(Color.valueOf(commandString.substring(8)));
+                } catch (Exception e) {
+                    System.out.println("Invalid parameter. Please type bgcolor help for more details.");
+                }
             }
-            catch (Exception e){
-                System.out.println("Invalid parameter. Please type bgcolor help for more details.");
-            };
         }
         // attribute command
         else if (userInputList.get(0).toLowerCase().equals("attribute")) {
