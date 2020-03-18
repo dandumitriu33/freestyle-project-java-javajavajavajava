@@ -56,7 +56,7 @@ public class Validation {
                 System.out.println("** Set a background color by typing: bgcolor <color>");
                 System.out.println("** Example: bgcolor red");
                 System.out.println("** Choose from: red, green, blue, yellow, cyan, magenta, black, white");
-                break;
+                return "bgcolor HELP";
         }
         return "bgcolor INVALID";
     }

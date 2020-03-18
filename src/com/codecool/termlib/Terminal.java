@@ -39,17 +39,14 @@ public class Terminal {
             else if (userInputList.get(0).toLowerCase().equals("bgcolor")) {
                 commandString = Validation.validateCommandBgcolor(userInputList);
                 command(commandString);
-                commandHistory.add(commandString);
             }
             else if (userInputList.get(0).equals("attribute")) {
                 commandString = Validation.validateCommandAttribute(userInputList);
                 command(commandString);
-                commandHistory.add(commandString);
             }
             else if (userInputList.get(0).equals("move")) {
                 commandString = Validation.validateCommandMove(userInput);
                 command(commandString);
-                commandHistory.add(commandString);
             }
             else if (userInputList.get(0).equals("clear")) {
                 if (userInputList.size()>1 && userInputList.get(1).toUpperCase().equals("HELP")) {
@@ -67,7 +64,7 @@ public class Terminal {
             } else if (userInputList.get(0).equals("fgcolor")){
                 commandString = Validation.validateCommandFgcolor(userInputList);
                 command(commandString);
-                commandHistory.add(commandString);
+
             }
             else if (userInputList.get(0).equals("quit") && userInputList.size()==1){
                 resetStyle();
@@ -77,12 +74,11 @@ public class Terminal {
             else if (userInputList.get(0).equals("movecursor")){
                 commandString = Validation.validateCommandMovecursor(userInput);
                 command(commandString);
-                commandHistory.add(commandString);
+
             }
             else if(userInputList.get(0).equals("glyph")){
                 commandString = Validation.validateCommandGlyph(userInput);
                 command(commandString);
-                commandHistory.add(commandString);
             }
             else if(userInputList.get(0).equals("help")) {
                 help();
@@ -427,6 +423,7 @@ public class Terminal {
         // bgcolor command
         if (commandString.substring(0, 7).equals("bgcolor")) {
             try {
+                commandHistory.add(String.format("bgcolor %s",Color.valueOf(commandString.substring(8)) ));
                 setBgColor(Color.valueOf(commandString.substring(8)));
             }
             catch (Exception e){
@@ -435,14 +432,38 @@ public class Terminal {
         }
         // attribute command
         else if (commandString.substring(0, 9).equals("attribute")) {
-            if (commandString.substring(10).equals("BRIGHT")) brighten();
-            else if (commandString.substring(10).equals("DIM")) dim();
-            else if (commandString.substring(10).equals("UNDERSCORE")) setUnderline();
-            else if (commandString.substring(10).equals("BLINK")) blink();
-            else if (commandString.substring(10).equals("REVERSE")) reverse();
-            else if (commandString.substring(10).equals("HIDDEN")) hide();
-            else if (commandString.substring(10).equals("RESET")) resetStyle();
-            else if (commandString.substring(10).equals("HELP")) helpAttribute();
+            if (commandString.substring(10).equals("BRIGHT")){
+                commandHistory.add(String.format("attribute %s", commandString.substring(10)));
+                brighten();
+            }
+            else if (commandString.substring(10).equals("DIM")) {
+                commandHistory.add(String.format("attribute %s", commandString.substring(10)));
+                dim();
+            }
+            else if (commandString.substring(10).equals("UNDERSCORE")) {
+                commandHistory.add(String.format("attribute %s", commandString.substring(10)));
+                setUnderline();
+            }
+            else if (commandString.substring(10).equals("BLINK")) {
+                commandHistory.add(String.format("attribute %s", commandString.substring(10)));
+                blink();
+            }
+            else if (commandString.substring(10).equals("REVERSE")) {
+                commandHistory.add(String.format("attribute %s", commandString.substring(10)));
+                reverse();
+            }
+            else if (commandString.substring(10).equals("HIDDEN")) {
+                commandHistory.add(String.format("attribute %s", commandString.substring(10)));
+                hide();
+            }
+            else if (commandString.substring(10).equals("RESET")) {
+                commandHistory.add(String.format("attribute %s", commandString.substring(10)));
+                resetStyle();
+            }
+            else if (commandString.substring(10).equals("HELP")) {
+                commandHistory.add("attribute HELP");
+                helpAttribute();
+            }
             else {
                 System.out.println("Invalid parameter. Please type attribute help for more details.");
             }
@@ -451,18 +472,24 @@ public class Terminal {
         else if (commandString.substring(0, 4).toLowerCase().equals("move") && commandString.substring(4, 5).equals(" ")) {
             List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
             if (userInputList.get(1).toUpperCase().equals("UP")) {
+                commandHistory.add(String.format("move %s %s",Direction.UP, userInputList.get(2)));
                 moveCursor(Direction.UP, Integer.parseInt(userInputList.get(2)));
             }
             else if (userInputList.get(1).toUpperCase().equals("DOWN")) {
+                commandHistory.add(String.format("move %s %s",Direction.DOWN, userInputList.get(2)));
                 moveCursor(Direction.DOWN, Integer.parseInt(userInputList.get(2)));
             }
             else if (userInputList.get(1).toUpperCase().equals("FORWARD")) {
+                commandHistory.add(String.format("move %s %s",Direction.FORWARD, userInputList.get(2)));
                 moveCursor(Direction.FORWARD, Integer.parseInt(userInputList.get(2)));
             }
             else if (userInputList.get(1).toUpperCase().equals("BACKWARD")) {
+                commandHistory.add(String.format("move %s %s",Direction.BACKWARD, userInputList.get(2)));
                 moveCursor(Direction.BACKWARD, Integer.parseInt(userInputList.get(2)));
+
             }
             else if (userInputList.get(1).toUpperCase().equals("HELP")) {
+                commandHistory.add("move HELP");
                 helpMove();
             }
             else {
@@ -473,6 +500,7 @@ public class Terminal {
         else if (commandString.substring(0, 5).toLowerCase().equals("glyph")) {
             List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
             if (userInputList.get(1).toLowerCase().equals("help")) {
+                commandHistory.add("glyph help");
                 helpGlyph();
             } else if (userInputList.get(1).toLowerCase().equals("invalid")) {
                 System.out.println("Invalid parameter. Please type glyph help for more details.");
@@ -481,6 +509,7 @@ public class Terminal {
                 char symbol = userInputList.get(1).charAt(0);
                 int positionX = Integer.parseInt(userInputList.get(2));
                 int positionY = Integer.parseInt(userInputList.get(3));
+                commandHistory.add(String.format("glyph %s %s %s", symbol, positionX, positionY));
                 setChar(symbol, positionX, positionY);
             }
 
@@ -508,7 +537,7 @@ public class Terminal {
             } else if (userInputList.get(1).toUpperCase().equals("SUCCESS")) {
                 System.out.println(" ");
                 for (String value : commandHistory) {
-                    System.out.println(value);
+                    System.out.println("** " + value);
                 }
                 System.out.println(" ");
             }
@@ -516,11 +545,14 @@ public class Terminal {
         // fgcolor command
         else if (commandString.substring(0, 7).toLowerCase().equals("fgcolor")) {
             if (commandString.substring(8).toUpperCase().equals("HELP")) {
+                commandHistory.add("fgcolor" + " " +"HELP");
                 helpFgcolor();
             }
             else {
                 try {
+                    commandHistory.add("fgcolor" + " " + Color.valueOf(commandString.substring(8).toUpperCase()));
                     setColor(Color.valueOf(commandString.substring(8).toUpperCase()));
+
                 } catch (Exception e) {
                     System.out.println("Invalid parameter. Please type fgcolor help for more details.");
                 }
@@ -529,7 +561,10 @@ public class Terminal {
         // movecursor command
         else if (commandString.substring(0, 10).toLowerCase().equals("movecursor")) {
             List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
-            if (userInputList.get(1).toUpperCase().equals("HELP")) helpMovecursor();
+            if (userInputList.get(1).toUpperCase().equals("HELP")) {
+                commandHistory.add("movecursor HELP");
+                helpMovecursor();
+            }
             else if (userInputList.get(1).toUpperCase().equals("INVALID")) {
                 System.out.println("Invalid parameter. Please type movecursor help for more details.");
             }
@@ -540,6 +575,7 @@ public class Terminal {
                     int arg1 = Integer.parseInt(userInputList.get(1));
                     possibleWrong = userInputList.get(2);
                     int arg2 = Integer.parseInt(userInputList.get(2));
+                    commandHistory.add("movecursor" + " " + arg1 + " " + arg2);
                     moveTo(arg1, arg2);
                 } catch (Exception NumberFormatException) {
                     System.out.println("Invalid parameter. Please type movecursor help for more details.");
