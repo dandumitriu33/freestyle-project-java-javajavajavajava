@@ -34,6 +34,7 @@ public class Validation {
      */
 
     public static String validateCommandBgcolor(List<String> userInputList) {
+        if (userInputList.size()!=2) return "bgcolor INVALID";
         String bgc = userInputList.get(1).toUpperCase();
         switch(bgc) {
             case "RED":
@@ -53,9 +54,6 @@ public class Validation {
             case "WHITE":
                 return "bgcolor WHITE";
             case "HELP":
-                System.out.println("** Set a background color by typing: bgcolor <color>");
-                System.out.println("** Example: bgcolor red");
-                System.out.println("** Choose from: red, green, blue, yellow, cyan, magenta, black, white");
                 return "bgcolor HELP";
         }
         return "bgcolor INVALID";
@@ -99,6 +97,7 @@ public class Validation {
      */
 
     public static String validateCommandAttribute(List<String> userInputList) {
+        if (userInputList.size()!=2) return "attribute INVALID";
         String attrib = userInputList.get(1).toUpperCase();
         switch (attrib) {
             case "BRIGHT":
@@ -127,7 +126,7 @@ public class Validation {
      */
     public static String validateCommandMove(String userInput) {
         List<String> userInputList = new ArrayList<String>(Arrays.asList(userInput.split(" ")));
-        if (userInputList.size()>3) return "move INVALID";
+        if (userInputList.size()>3 || userInputList.size()<2) return "move INVALID";
         if (userInputList.get(1).toUpperCase().equals("UP") && validatePositiveInteger(userInputList.get(2))) return userInput;
         else if (userInputList.get(1).toUpperCase().equals("DOWN") && validatePositiveInteger(userInputList.get(2))) return userInput;
         else if (userInputList.get(1).toUpperCase().equals("FORWARD") && validatePositiveInteger(userInputList.get(2))) return userInput;
