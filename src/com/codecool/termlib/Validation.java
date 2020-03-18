@@ -17,7 +17,7 @@ public class Validation {
 
     public static String userInputValidation(String userInput) {
         List<String> userInputList = new ArrayList<String>(Arrays.asList(userInput.split(" ")));
-        String[] mainCommands = {"bgcolor", "fgcolor", "attribute", "move", "movecursor", "clear", "glyph", "quit", "help", "debug_read","debug_history", "clock"};
+        String[] mainCommands = {"bgcolor", "fgcolor", "attribute", "move", "movecursor", "clear", "glyph", "quit", "help", "debug_read","history", "clock"};
         if (userInputList.get(0).equals("quit") && userInputList.size()>1) {
             return "help required";
         }
@@ -160,6 +160,28 @@ public class Validation {
             }
         }
         return "clock DEFAULT";
+
+    }
+    public static String validateCommandHistory (String userInput, List commandHistory) {
+        List<String> userInputList = new ArrayList<String>(Arrays.asList(userInput.split(" ")));
+        if (userInputList.size() > 1 && userInputList.get(0).toLowerCase().equals("history")) {
+            String helper = userInputList.get(1);
+            helper = helper.toUpperCase();
+            if (helper.equals("HELP")) {
+                return "history HELP";
+            }
+            else {
+                return "history ERROR_COMMAND";
+
+            }
+        } else {
+            if (commandHistory.size() == 0) {
+                return "history ERROR_NO_HISTORY";
+            } else {
+                return "history SUCCESS";
+            }
+
+        }
 
     }
 

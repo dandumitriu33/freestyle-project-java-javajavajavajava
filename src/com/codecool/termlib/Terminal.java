@@ -14,6 +14,8 @@ import javax.swing.plaf.synth.SynthOptionPaneUI;
 
 public class Terminal {
 
+    private static List <String> commandHistory = new ArrayList<String>();
+
     public static void main(String[] args) {
         try {
             loadingScreen();
@@ -25,7 +27,7 @@ public class Terminal {
         String validatedUserInput = "";
         String commandString = "";
         Scanner sc = new Scanner(System.in);
-        List <String> commandHistory = new ArrayList<String>();
+
         while (!userInput.equals("quit")) {
             System.out.print(">");
             userInput = sc.nextLine();
@@ -179,29 +181,10 @@ public class Terminal {
                 readFromFile(textFile);
                 commandHistory.add(userInputList.get(0));
             }
-            else if (userInputList.get(0).equals("debug_history")) {
-                if (userInputList.size() > 1) {
-                    String helper = userInputList.get(1);
-                    helper = helper.toUpperCase();
-                    if (helper.equals("HELP")) {
-                        System.out.println("** This command prints the command history of the current session");
-                        System.out.println("** Example Usage: history");
-                    }
-                    else {
-                        System.out.println("ERROR: Invalid Parameter try using <command> help");
-                    }
-                } else {
-                    if (commandHistory.size() == 0) {
-                        System.out.println("** No commands entered");
-                    } else {
-                        System.out.println(" ");
-                        for (String value : commandHistory) {
-                            System.out.println("** " + value);
-                        }
-                        System.out.println(" ");
-                    }
+            else if (userInputList.get(0).toLowerCase().equals("history")) {
+                commandString = Validation.validateCommandHistory(userInput, commandHistory);
+                command(commandString);
 
-                }
             }
             else if (userInputList.get(0).toLowerCase().equals("clock")) {
                 commandString = Validation.validateCommandClock(userInput);
@@ -471,6 +454,14 @@ public class Terminal {
         System.out.println("** Supported parameters are: HKG, NYC, LON");
     }
 
+    /**
+     * Displays help info for the history command.
+     */
+    public static void helpHistory() {
+        System.out.println("** This command prints the command history of the current session");
+        System.out.println("** Example Usage: history");
+    }
+
 
     /**
      * Set the character displayed under the current cursor position.
@@ -574,6 +565,25 @@ public class Terminal {
             } else {
                 clock(userInputList.get(1).toUpperCase());
             }
+        }
+
+        //history command
+        else if(commandString.substring(0,7).toLowerCase().equals("history")) {
+            List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
+            if(userInputList.get(1).toUpperCase().equals("HELP")) {
+                helpHistory();
+            } else if (userInputList.get(1).toUpperCase().equals("ERROR_COMMAND")) {
+                System.out.println("ERROR: Attribute invalid try using history help");
+            } else if (userInputList.get(1).toUpperCase().equals("ERROR_NO_HISTORY")) {
+                System.out.println("No suitable commands have been typed.");
+            } else if (userInputList.get(1).toUpperCase().equals("SUCCESS")) {
+                System.out.println(" ");
+                for (String value : commandHistory) {
+                    System.out.println(value);
+                }
+                System.out.println(" ");
+            }
+
         }
 
 
