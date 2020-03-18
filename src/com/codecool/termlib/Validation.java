@@ -17,7 +17,7 @@ public class Validation {
 
     public static String userInputValidation(String userInput) {
         List<String> userInputList = new ArrayList<String>(Arrays.asList(userInput.split(" ")));
-        String[] mainCommands = {"bgcolor", "fgcolor", "attribute", "move", "movecursor", "clear", "glyph", "quit", "help", "debug_read","debug_history"};
+        String[] mainCommands = {"bgcolor", "fgcolor", "attribute", "move", "movecursor", "clear", "glyph", "quit", "help", "debug_read","debug_history", "clock"};
         if (userInputList.get(0).equals("quit") && userInputList.size()>1) {
             return "help required";
         }

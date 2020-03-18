@@ -3,6 +3,8 @@ package com.codecool.termlib;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import com.codecool.termlib.Validation;
 
@@ -197,6 +199,30 @@ public class Terminal {
                         System.out.println(" ");
                     }
 
+                }
+            }
+            else if (userInputList.get(0).equals("clock"))
+            {
+                if (userInputList.size() < 2)
+                {
+                    userInputList.add(1, "default");
+                    String parameter = userInputList.get(1);
+                    commandHistory.add(userInputList.get(0));
+                    clock(parameter);
+
+                } else {
+                    String parameter = userInputList.get(1);
+                    parameter = parameter.toUpperCase();
+                    String[] possibleArgs = new String[] {"NYC", "HKG", "LON", "HELP"};
+                    if (!Arrays.stream(possibleArgs).anyMatch(parameter::equals))
+                    {
+                        commandHistory.add(userInputList.get(0));
+                    }
+                    else
+                    {
+                        commandHistory.add(userInputList.get(0) + " " + parameter);
+                    }
+                    clock(parameter);
                 }
             }
             else{
@@ -595,6 +621,36 @@ public class Terminal {
         }
         catch (FileNotFoundException e){
             System.out.println("ERROR: File not found.");
+        }
+    }
+
+    public static void clock (String time)
+    {
+        Date currentClock = new Date();
+        DateFormat currentClockFormatted = new SimpleDateFormat("HH:mm:ss yyyy-MM-dd");
+
+        switch( time ){
+            case "HKG":
+                currentClockFormatted.setTimeZone(TimeZone.getTimeZone("Asia/Hong_Kong"));
+                System.out.println(String.format("Current time in Hong Kong: %s", currentClockFormatted.format(currentClock)));
+                break;
+            case "LON":
+                currentClockFormatted.setTimeZone(TimeZone.getTimeZone("Europe/London"));
+                System.out.println(String.format("Current time in London: %s", currentClockFormatted.format(currentClock)));
+                break;
+            case "NYC":
+                currentClockFormatted.setTimeZone(TimeZone.getTimeZone("America/New_York"));
+                System.out.println(String.format("Current time in New York City: %s", currentClockFormatted.format(currentClock)));
+                break;
+            case "HELP":
+                System.out.println("** This command returns the current date and time.");
+                System.out.println("** Example Usage: clock {parameter}");
+                System.out.println("** Supported parameters are: HKG, NYC, LON");
+                break;
+            default:
+                currentClockFormatted.setTimeZone(TimeZone.getDefault());
+                System.out.println(String.format("Current time at your current location is: %s", currentClockFormatted.format(currentClock)));
+                break;
         }
     }
 
