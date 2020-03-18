@@ -75,38 +75,9 @@ public class Terminal {
                 break;
             }
             else if (userInputList.get(0).equals("movecursor")){
-                if (userInputList.size() < 3)
-                {
-                    if(userInputList.size() == 2)
-                    {
-                        String helper = userInputList.get(1);
-                        helper = helper.toUpperCase();
-                        if (helper.equals("HELP")){
-                            System.out.println("** This function takes two integer arguments and moves the cursor to the specified position on the screen.");
-                            System.out.println("** Example Usage: movecursor 12 50");
-                            commandHistory.add(userInputList.get(0));
-                        }
-                        else {
-                            System.out.println("ERROR: Unsuitable number of attributes, use {command} help to get more info.");
-                        }
-                    }
-                    else {
-                        System.out.println("ERROR: Unsuitable number of attributes, use {command} help to get more info.");
-                    }
-                }
-                else {
-                    String possibleWrong = null;
-                    try {
-                        possibleWrong = userInputList.get(1);
-                        int arg1 = Integer.parseInt(userInputList.get(1));
-                        possibleWrong = userInputList.get(2);
-                        int arg2 = Integer.parseInt(userInputList.get(2));
-                        moveTo(arg1, arg2);
-                        commandHistory.add(userInputList.get(0) + " " + arg1 + " " + arg2);
-                    } catch (Exception NumberFormatException) {
-                        System.out.println(String.format("Argument %s is of unsuitable type, please use only integers for this operation or consult the help command.", possibleWrong));
-                    }
-                }
+                commandString = Validation.validateCommandMovecursor(userInput);
+                command(commandString);
+                commandHistory.add(commandString);
             }
             else if(userInputList.get(0).equals("glyph")){
                 commandString = Validation.validateCommandGlyph(userInput);
@@ -413,6 +384,13 @@ public class Terminal {
         System.out.println("** Supported colors are: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE");
     }
 
+    /**
+     * Displays help info for the movecursor command.
+     */
+    public static void helpMovecursor() {
+        System.out.println("** This function takes two integer arguments and moves the cursor to the specified position on the screen.");
+        System.out.println("** Example Usage: movecursor 12 50");
+    }
 
     /**
      * Set the character displayed under the current cursor position.
@@ -470,7 +448,7 @@ public class Terminal {
             }
         }
         // move command
-        else if (commandString.substring(0, 4).toLowerCase().equals("move")) {
+        else if (commandString.substring(0, 4).toLowerCase().equals("move") && commandString.substring(4, 5).equals(" ")) {
             List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
             if (userInputList.get(1).toUpperCase().equals("UP")) {
                 moveCursor(Direction.UP, Integer.parseInt(userInputList.get(2)));
@@ -536,7 +514,7 @@ public class Terminal {
             }
         }
         // fgcolor command
-        else if (commandString.substring(0, 7).equals("fgcolor")) {
+        else if (commandString.substring(0, 7).toLowerCase().equals("fgcolor")) {
             if (commandString.substring(8).toUpperCase().equals("HELP")) {
                 helpFgcolor();
             }
@@ -548,6 +526,28 @@ public class Terminal {
                 }
             }
         }
+        // movecursor command
+        else if (commandString.substring(0, 10).toLowerCase().equals("movecursor")) {
+            List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
+            if (userInputList.get(1).toUpperCase().equals("HELP")) helpMovecursor();
+            else if (userInputList.get(1).toUpperCase().equals("INVALID")) {
+                System.out.println("Invalid parameter. Please type movecursor help for more details.");
+            }
+            else {
+                String possibleWrong = null;
+                try {
+                    possibleWrong = userInputList.get(1);
+                    int arg1 = Integer.parseInt(userInputList.get(1));
+                    possibleWrong = userInputList.get(2);
+                    int arg2 = Integer.parseInt(userInputList.get(2));
+                    moveTo(arg1, arg2);
+                } catch (Exception NumberFormatException) {
+                    System.out.println("Invalid parameter. Please type movecursor help for more details.");
+//                    System.out.println(String.format("Argument %s is of unsuitable type, please use only integers for this operation or consult the help command.", possibleWrong));
+                }
+            }
+        }
+
 
 
 

@@ -137,6 +137,25 @@ public class Validation {
     }
 
     /**
+     * movecursor command validation
+     */
+    public static String validateCommandMovecursor(String userInput) {
+        List<String> userInputList = new ArrayList<String>(Arrays.asList(userInput.split(" ")));
+        if (userInputList.size() > 3 || userInputList.size() < 2) return "movecursor INVALID";
+        else if (userInputList.size() == 2 && userInputList.get(1).toLowerCase().equals("help"))
+            return "movecursor HELP";
+        else if (userInputList.size() == 3 &&
+                validatePositiveInteger(userInputList.get(1)) &&
+                validatePositiveInteger(userInputList.get(2))) {
+            return userInputList.get(0).toLowerCase() + " " + userInputList.get(1) + " " + userInputList.get(2);
+        } else {
+            return "movecursor INVALID";
+        }
+    }
+
+
+
+    /**
      * validates a positive integer (coming in as a string)
      */
     public static boolean validatePositiveInteger(String number) {
