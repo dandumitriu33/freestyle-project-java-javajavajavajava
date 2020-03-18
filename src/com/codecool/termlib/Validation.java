@@ -153,6 +153,18 @@ public class Validation {
         }
     }
 
+    /**
+     * clear command validation
+     */
+    public static String validateCommandClear(String userInput) {
+        List<String> userInputList = new ArrayList<String>(Arrays.asList(userInput.split(" ")));
+        if (userInputList.size() == 2 && userInputList.get(1).toLowerCase().equals("help")) return "clear HELP";
+        else if (userInputList.size() == 1) return "clear";
+        else {
+            return "clear INVALID";
+        }
+    }
+
 
 
     /**
