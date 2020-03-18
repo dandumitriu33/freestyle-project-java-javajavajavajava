@@ -9,6 +9,12 @@ import com.codecool.termlib.Color;
 public class Terminal {
 
     public static void main(String[] args) {
+        try {
+            loadingScreen();
+        } catch (InterruptedException e) {
+            System.out.println("");
+        }
+
         String userInput ="";
         String validatedUserInput = "";
         String commandString = "";
@@ -88,6 +94,7 @@ public class Terminal {
                         System.out.println("** This command changes the foreground color of the text.");
                         System.out.println("** Example Usage: fgcolor RED -> changes the text color to red.");
                         System.out.println("** Supported colors are: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE");
+                        System.out.println("** If no parameter is given a default dark grey color is applied.");
                         break;
                     default:
                         System.out.println(String.format("ERROR:The attribute %s is not a valid parameter for fgcolor function. Try fgcolor HELP for a detailed usage guide.", attribute));
@@ -95,6 +102,8 @@ public class Terminal {
                 }
             }
             else if (userInputList.get(0).equals("quit") && userInputList.size()==1){
+                resetStyle();
+                clearScreen();
                 break;
             }
             else if (userInputList.get(0).equals("movecursor")){
@@ -489,6 +498,34 @@ public class Terminal {
 
     }
 
+    /**
+     * Loading Screen Generator for the interface
+     */
+    public static void loadingScreen() throws InterruptedException {
+
+        System.out.println("-TermLib- A simple terminal emulator.");
+        System.out.println("Loading....");
+
+        System.out.print(CONTROL_CODE+"44"+STYLE + " ");
+        for(int i = 0; i < 10; i++)
+        {
+            Thread.sleep(500);
+            if (i < 3) {
+
+                System.out.print(CONTROL_CODE+ "41"+ STYLE + " ");
+                resetStyle();
+
+            } else if (i < 6){
+                System.out.print(CONTROL_CODE+ "43"+ STYLE + " ");
+                resetStyle();
+            } else if(i > 6){
+                System.out.print(CONTROL_CODE+ "42"+ STYLE + " ");
+                resetStyle();
+            }
+        }
+        System.out.print(CONTROL_CODE+"44"+STYLE + " \n");
+        resetStyle();
+    }
 
 
 }
