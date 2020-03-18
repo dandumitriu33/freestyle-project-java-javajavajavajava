@@ -476,6 +476,10 @@ public class Terminal {
                 commandHistory.add("attribute HELP");
                 helpAttribute();
             }
+            else if (userInputList.get(1).toUpperCase().equals("INVALID")) {
+//                commandHistory.add("attribute INVALID");
+                System.out.println("Invalid parameter. Please type attribute help for more details.");
+            }
             else {
                 System.out.println("Invalid parameter. Please type attribute help for more details.");
             }
