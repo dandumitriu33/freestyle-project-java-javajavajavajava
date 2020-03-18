@@ -432,8 +432,7 @@ public class Terminal {
             };
         }
         // attribute command
-
-        else if (commandString.substring(0, 9).equals("attribute")) {
+        else if (userInputList.get(0).toLowerCase().equals("attribute")) {
             if (commandString.substring(10).equals("BRIGHT")){
                 commandHistory.add(String.format("attribute %s", commandString.substring(10)));
                 brighten();
@@ -559,7 +558,6 @@ public class Terminal {
         // movecursor command
 
          else if (userInputList.get(0).toLowerCase().equals("movecursor")) {
-            List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
             if (userInputList.get(1).toUpperCase().equals("HELP")) {
                 commandHistory.add("movecursor HELP");
                 helpMovecursor();
