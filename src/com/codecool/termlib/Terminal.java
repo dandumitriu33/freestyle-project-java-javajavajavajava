@@ -1,18 +1,33 @@
 package com.codecool.termlib;
 
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import com.codecool.termlib.Validation;
 
 import com.codecool.termlib.Color;
 
+import javax.swing.plaf.synth.SynthOptionPaneUI;
+
 public class Terminal {
 
+    private static List <String> commandHistory = new ArrayList<String>();
+
     public static void main(String[] args) {
+        try {
+            loadingScreen();
+        } catch (InterruptedException e) {
+            System.out.println("");
+        }
+
         String userInput ="";
         String validatedUserInput = "";
         String commandString = "";
         Scanner sc = new Scanner(System.in);
+
         while (!userInput.equals("quit")) {
             System.out.print(">");
             userInput = sc.nextLine();
@@ -24,77 +39,97 @@ public class Terminal {
             else if (userInputList.get(0).toLowerCase().equals("bgcolor")) {
                 commandString = Validation.validateCommandBgcolor(userInputList);
                 command(commandString);
+                commandHistory.add(commandString);
             }
             else if (userInputList.get(0).equals("attribute")) {
                 commandString = Validation.validateCommandAttribute(userInputList);
                 command(commandString);
+                commandHistory.add(commandString);
             }
             else if (userInputList.get(0).equals("move")) {
                 commandString = Validation.validateCommandMove(userInput);
                 command(commandString);
+                commandHistory.add(commandString);
             }
             else if (userInputList.get(0).equals("clear")) {
                 if (userInputList.size()>1 && userInputList.get(1).toUpperCase().equals("HELP")) {
                     System.out.println("** Clears the screen without resetting the preferences.");
                     System.out.println("** Example: clear");
+                    commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
                 }
                 else if (userInputList.size()>1 && !userInputList.get(1).toUpperCase().equals("HELP")) {
                     System.out.println("Invalid clear command. Please type clear help for more info.");
                 }
                 else {
+                    commandHistory.add(userInputList.get(0));
                     clearScreen();
                 }
             } else if (userInputList.get(0).equals("fgcolor")){
                 if (userInputList.size() < 2)
                 {
                     userInputList.add(1,"White");
+                    commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
                 }
                 Color textColor;
                 String attribute = userInputList.get(1).toUpperCase();
+
                 switch (attribute){
                     case "BLACK":
                         textColor = Color.BLACK;
+                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
                         setColor(textColor);
                         break;
                     case "RED":
                         textColor = Color.RED;
+                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
                         setColor(textColor);
                         break;
                     case "GREEN":
                         textColor = Color.GREEN;
+                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
                         setColor(textColor);
                         break;
                     case "YELLOW":
                         textColor = Color.YELLOW;
+                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
                         setColor(textColor);
                         break;
                     case "BLUE":
                         textColor = Color.BLUE;
+                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
                         setColor(textColor);
                         break;
                     case "MAGENTA":
                         textColor = Color.MAGENTA;
+                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
                         setColor(textColor);
                         break;
                     case "CYAN":
                         textColor = Color.CYAN;
+                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
                         setColor(textColor);
                         break;
                     case "WHITE":
                         textColor = Color.WHITE;
+                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
                         setColor(textColor);
                         break;
                     case "HELP":
+                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
                         System.out.println("** This command changes the foreground color of the text.");
                         System.out.println("** Example Usage: fgcolor RED -> changes the text color to red.");
                         System.out.println("** Supported colors are: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE");
+                        System.out.println("** If no parameter is given a default dark grey color is applied.");
                         break;
                     default:
                         System.out.println(String.format("ERROR:The attribute %s is not a valid parameter for fgcolor function. Try fgcolor HELP for a detailed usage guide.", attribute));
 
                 }
+
             }
             else if (userInputList.get(0).equals("quit") && userInputList.size()==1){
+                resetStyle();
+                clearScreen();
                 break;
             }
             else if (userInputList.get(0).equals("movecursor")){
@@ -107,6 +142,7 @@ public class Terminal {
                         if (helper.equals("HELP")){
                             System.out.println("** This function takes two integer arguments and moves the cursor to the specified position on the screen.");
                             System.out.println("** Example Usage: movecursor 12 50");
+                            commandHistory.add(userInputList.get(0));
                         }
                         else {
                             System.out.println("ERROR: Unsuitable number of attributes, use {command} help to get more info.");
@@ -124,6 +160,7 @@ public class Terminal {
                         possibleWrong = userInputList.get(2);
                         int arg2 = Integer.parseInt(userInputList.get(2));
                         moveTo(arg1, arg2);
+                        commandHistory.add(userInputList.get(0) + " " + arg1 + " " + arg2);
                     } catch (Exception NumberFormatException) {
                         System.out.println(String.format("Argument %s is of unsuitable type, please use only integers for this operation or consult the help command.", possibleWrong));
                     }
@@ -132,9 +169,27 @@ public class Terminal {
             else if(userInputList.get(0).equals("glyph")){
                 commandString = Validation.validateCommandGlyph(userInput);
                 command(commandString);
+                commandHistory.add(commandString);
             }
             else if(userInputList.get(0).equals("help")) {
                 help();
+                commandHistory.add(userInputList.get(0));
+            }
+            else if (userInputList.get(0).equals("debug_read"))
+            {
+                File textFile = new File("com/codecool/termlib/exampleText.txt");
+                readFromFile(textFile);
+                commandHistory.add(userInputList.get(0));
+            }
+            else if (userInputList.get(0).toLowerCase().equals("history")) {
+                commandString = Validation.validateCommandHistory(userInput, commandHistory);
+                command(commandString);
+
+            }
+            else if (userInputList.get(0).toLowerCase().equals("clock")) {
+                commandString = Validation.validateCommandClock(userInput);
+                command(commandString);
+                commandHistory.add(commandString);
             }
             else{
                 System.out.println("ERROR: Command unrecognized. Type help for more info.");
@@ -390,6 +445,22 @@ public class Terminal {
         System.out.println("** The glyph character can be anything except empty space ' '. Coordinates must be positive integers.");
     }
 
+    /**
+     * Displays help info for the clock command.
+     */
+    public static void helpClock() {
+        System.out.println("** This command returns the current date and time.");
+        System.out.println("** Example Usage: clock {parameter}");
+        System.out.println("** Supported parameters are: HKG, NYC, LON");
+    }
+
+    /**
+     * Displays help info for the history command.
+     */
+    public static void helpHistory() {
+        System.out.println("** This command prints the command history of the current session");
+        System.out.println("** Example Usage: history");
+    }
 
 
     /**
@@ -408,8 +479,10 @@ public class Terminal {
         //move to position
         moveTo(x,y);
         //modify character
+        reverse();
         System.out.print(c);
         //return to initial position
+        resetStyle();
         System.out.print("\0338");
     }
 
@@ -484,11 +557,110 @@ public class Terminal {
 
         }
 
+        // clock command
+        else if(commandString.substring(0, 5).toLowerCase().equals("clock")) {
+            List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
+            if (userInputList.get(1).toUpperCase().equals("DEFAULT")) {
+                clock("DEFAULT");
+            } else {
+                clock(userInputList.get(1).toUpperCase());
+            }
+        }
+
+        //history command
+        else if(commandString.substring(0,7).toLowerCase().equals("history")) {
+            List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
+            if(userInputList.get(1).toUpperCase().equals("HELP")) {
+                helpHistory();
+            } else if (userInputList.get(1).toUpperCase().equals("ERROR_COMMAND")) {
+                System.out.println("ERROR: Attribute invalid try using history help");
+            } else if (userInputList.get(1).toUpperCase().equals("ERROR_NO_HISTORY")) {
+                System.out.println("No suitable commands have been typed.");
+            } else if (userInputList.get(1).toUpperCase().equals("SUCCESS")) {
+                System.out.println(" ");
+                for (String value : commandHistory) {
+                    System.out.println(value);
+                }
+                System.out.println(" ");
+            }
+
+        }
+
 
 
 
     }
 
+    /**
+     * Loading Screen Generator for the interface
+     */
+    public static void loadingScreen() throws InterruptedException {
 
+        System.out.println("-TermLib- A simple terminal emulator.");
+        System.out.println("Loading....");
+
+        System.out.print(CONTROL_CODE+"44"+STYLE + " ");
+        for(int i = 0; i < 10; i++)
+        {
+            Thread.sleep(500);
+            if (i < 3) {
+
+                System.out.print(CONTROL_CODE+ "41"+ STYLE + " ");
+                resetStyle();
+
+            } else if (i < 6){
+                System.out.print(CONTROL_CODE+ "43"+ STYLE + " ");
+                resetStyle();
+            } else if(i > 6){
+                System.out.print(CONTROL_CODE+ "42"+ STYLE + " ");
+                resetStyle();
+            }
+        }
+        System.out.print(CONTROL_CODE+"44"+STYLE + " \n");
+        resetStyle();
+    }
+
+    public static void readFromFile(File textFile)
+    {
+        try {
+            Scanner text = new Scanner(textFile);
+
+            while (text.hasNextLine()) {
+                String data = text.nextLine();
+                System.out.println(data);
+            }
+        }
+        catch (FileNotFoundException e){
+            System.out.println("ERROR: File not found.");
+        }
+    }
+
+    public static void clock (String time)
+    {
+        Date currentClock = new Date();
+        DateFormat currentClockFormatted = new SimpleDateFormat("HH:mm:ss yyyy-MM-dd");
+
+        switch( time ){
+            case "HKG":
+                currentClockFormatted.setTimeZone(TimeZone.getTimeZone("Asia/Hong_Kong"));
+                System.out.println(String.format("Current time in Hong Kong: %s", currentClockFormatted.format(currentClock)));
+                break;
+            case "LON":
+                currentClockFormatted.setTimeZone(TimeZone.getTimeZone("Europe/London"));
+                System.out.println(String.format("Current time in London: %s", currentClockFormatted.format(currentClock)));
+                break;
+            case "NYC":
+                currentClockFormatted.setTimeZone(TimeZone.getTimeZone("America/New_York"));
+                System.out.println(String.format("Current time in New York City: %s", currentClockFormatted.format(currentClock)));
+                break;
+            case "HELP":
+                helpClock();
+                break;
+            default:
+                currentClockFormatted.setTimeZone(TimeZone.getDefault());
+                System.out.println(String.format("Current time at your current location is: %s", currentClockFormatted.format(currentClock)));
+                break;
+        }
+    }
 
 }
