@@ -65,67 +65,9 @@ public class Terminal {
                     clearScreen();
                 }
             } else if (userInputList.get(0).equals("fgcolor")){
-                if (userInputList.size() < 2)
-                {
-                    userInputList.add(1,"White");
-                    commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
-                }
-                Color textColor;
-                String attribute = userInputList.get(1).toUpperCase();
-
-                switch (attribute){
-                    case "BLACK":
-                        textColor = Color.BLACK;
-                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
-                        setColor(textColor);
-                        break;
-                    case "RED":
-                        textColor = Color.RED;
-                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
-                        setColor(textColor);
-                        break;
-                    case "GREEN":
-                        textColor = Color.GREEN;
-                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
-                        setColor(textColor);
-                        break;
-                    case "YELLOW":
-                        textColor = Color.YELLOW;
-                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
-                        setColor(textColor);
-                        break;
-                    case "BLUE":
-                        textColor = Color.BLUE;
-                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
-                        setColor(textColor);
-                        break;
-                    case "MAGENTA":
-                        textColor = Color.MAGENTA;
-                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
-                        setColor(textColor);
-                        break;
-                    case "CYAN":
-                        textColor = Color.CYAN;
-                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
-                        setColor(textColor);
-                        break;
-                    case "WHITE":
-                        textColor = Color.WHITE;
-                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
-                        setColor(textColor);
-                        break;
-                    case "HELP":
-                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
-                        System.out.println("** This command changes the foreground color of the text.");
-                        System.out.println("** Example Usage: fgcolor RED -> changes the text color to red.");
-                        System.out.println("** Supported colors are: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE");
-                        System.out.println("** If no parameter is given a default dark grey color is applied.");
-                        break;
-                    default:
-                        System.out.println(String.format("ERROR:The attribute %s is not a valid parameter for fgcolor function. Try fgcolor HELP for a detailed usage guide.", attribute));
-
-                }
-
+                commandString = Validation.validateCommandFgcolor(userInputList);
+                command(commandString);
+                commandHistory.add(commandString);
             }
             else if (userInputList.get(0).equals("quit") && userInputList.size()==1){
                 resetStyle();
@@ -462,6 +404,15 @@ public class Terminal {
         System.out.println("** Example Usage: history");
     }
 
+    /**
+     * Displays help info for the fgcolor command.
+     */
+    public static void helpFgcolor() {
+        System.out.println("** This command changes the foreground color of the text.");
+        System.out.println("** Example Usage: fgcolor RED -> changes the text color to red.");
+        System.out.println("** Supported colors are: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE");
+    }
+
 
     /**
      * Set the character displayed under the current cursor position.
@@ -495,7 +446,7 @@ public class Terminal {
      * @param commandString The unique part of a command sequence.
      */
     private static void command(String commandString) {
-        //bgcolor command
+        // bgcolor command
         if (commandString.substring(0, 7).equals("bgcolor")) {
             try {
                 setBgColor(Color.valueOf(commandString.substring(8)));
@@ -504,7 +455,7 @@ public class Terminal {
                 System.out.println("Invalid parameter. Please type bgcolor help for more details.");
             };
         }
-        //attribute command
+        // attribute command
         else if (commandString.substring(0, 9).equals("attribute")) {
             if (commandString.substring(10).equals("BRIGHT")) brighten();
             else if (commandString.substring(10).equals("DIM")) dim();
@@ -518,7 +469,7 @@ public class Terminal {
                 System.out.println("Invalid parameter. Please type attribute help for more details.");
             }
         }
-        //move command
+        // move command
         else if (commandString.substring(0, 4).toLowerCase().equals("move")) {
             List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
             if (userInputList.get(1).toUpperCase().equals("UP")) {
@@ -567,7 +518,7 @@ public class Terminal {
             }
         }
 
-        //history command
+        // history command
         else if(commandString.substring(0,7).toLowerCase().equals("history")) {
             List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
             if(userInputList.get(1).toUpperCase().equals("HELP")) {
@@ -583,8 +534,25 @@ public class Terminal {
                 }
                 System.out.println(" ");
             }
-
         }
+        // fgcolor command
+        else if (commandString.substring(0, 7).equals("fgcolor")) {
+            if (commandString.substring(8).toUpperCase().equals("HELP")) {
+                helpFgcolor();
+            }
+            else {
+                try {
+                    setColor(Color.valueOf(commandString.substring(8).toUpperCase()));
+                } catch (Exception e) {
+                    System.out.println("Invalid parameter. Please type fgcolor help for more details.");
+                }
+            }
+        }
+
+
+
+
+
 
 
 

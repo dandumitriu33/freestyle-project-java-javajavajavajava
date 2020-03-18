@@ -62,6 +62,38 @@ public class Validation {
     }
 
     /**
+     * fgcolor command validation
+     */
+    public static String validateCommandFgcolor(List<String> userInputList) {
+        if (userInputList.size() != 2) {
+            return "fgcolor INVALID";
+        }
+        String fgc = userInputList.get(1).toUpperCase();
+        switch (fgc) {
+            case "BLACK":
+                return "fgcolor BLACK";
+            case "RED":
+                return "fgcolor RED";
+            case "GREEN":
+                return "fgcolor GREEN";
+            case "YELLOW":
+                return "fgcolor YELLOW";
+            case "BLUE":
+                return "fgcolor BLUE";
+            case "MAGENTA":
+                return "fgcolor MAGENTA";
+            case "CYAN":
+                return "fgcolor CYAN";
+            case "WHITE":
+                return "fgcolor WHITE";
+            case "HELP":
+                return "fgcolor HELP";
+        }
+        return "fgcolor INVALID";
+    }
+
+
+    /**
      * attribute command validation.
      *
      */
