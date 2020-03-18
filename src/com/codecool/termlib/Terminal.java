@@ -65,67 +65,9 @@ public class Terminal {
                     clearScreen();
                 }
             } else if (userInputList.get(0).equals("fgcolor")){
-                if (userInputList.size() < 2)
-                {
-                    userInputList.add(1,"White");
-                    commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
-                }
-                Color textColor;
-                String attribute = userInputList.get(1).toUpperCase();
-
-                switch (attribute){
-                    case "BLACK":
-                        textColor = Color.BLACK;
-                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
-                        setColor(textColor);
-                        break;
-                    case "RED":
-                        textColor = Color.RED;
-                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
-                        setColor(textColor);
-                        break;
-                    case "GREEN":
-                        textColor = Color.GREEN;
-                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
-                        setColor(textColor);
-                        break;
-                    case "YELLOW":
-                        textColor = Color.YELLOW;
-                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
-                        setColor(textColor);
-                        break;
-                    case "BLUE":
-                        textColor = Color.BLUE;
-                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
-                        setColor(textColor);
-                        break;
-                    case "MAGENTA":
-                        textColor = Color.MAGENTA;
-                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
-                        setColor(textColor);
-                        break;
-                    case "CYAN":
-                        textColor = Color.CYAN;
-                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
-                        setColor(textColor);
-                        break;
-                    case "WHITE":
-                        textColor = Color.WHITE;
-                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
-                        setColor(textColor);
-                        break;
-                    case "HELP":
-                        commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
-                        System.out.println("** This command changes the foreground color of the text.");
-                        System.out.println("** Example Usage: fgcolor RED -> changes the text color to red.");
-                        System.out.println("** Supported colors are: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE");
-                        System.out.println("** If no parameter is given a default dark grey color is applied.");
-                        break;
-                    default:
-                        System.out.println(String.format("ERROR:The attribute %s is not a valid parameter for fgcolor function. Try fgcolor HELP for a detailed usage guide.", attribute));
-
-                }
-
+                commandString = Validation.validateCommandFgcolor(userInputList);
+                command(commandString);
+                commandHistory.add(commandString);
             }
             else if (userInputList.get(0).equals("quit") && userInputList.size()==1){
                 resetStyle();
@@ -133,38 +75,9 @@ public class Terminal {
                 break;
             }
             else if (userInputList.get(0).equals("movecursor")){
-                if (userInputList.size() < 3)
-                {
-                    if(userInputList.size() == 2)
-                    {
-                        String helper = userInputList.get(1);
-                        helper = helper.toUpperCase();
-                        if (helper.equals("HELP")){
-                            System.out.println("** This function takes two integer arguments and moves the cursor to the specified position on the screen.");
-                            System.out.println("** Example Usage: movecursor 12 50");
-                            commandHistory.add(userInputList.get(0));
-                        }
-                        else {
-                            System.out.println("ERROR: Unsuitable number of attributes, use {command} help to get more info.");
-                        }
-                    }
-                    else {
-                        System.out.println("ERROR: Unsuitable number of attributes, use {command} help to get more info.");
-                    }
-                }
-                else {
-                    String possibleWrong = null;
-                    try {
-                        possibleWrong = userInputList.get(1);
-                        int arg1 = Integer.parseInt(userInputList.get(1));
-                        possibleWrong = userInputList.get(2);
-                        int arg2 = Integer.parseInt(userInputList.get(2));
-                        moveTo(arg1, arg2);
-                        commandHistory.add(userInputList.get(0) + " " + arg1 + " " + arg2);
-                    } catch (Exception NumberFormatException) {
-                        System.out.println(String.format("Argument %s is of unsuitable type, please use only integers for this operation or consult the help command.", possibleWrong));
-                    }
-                }
+                commandString = Validation.validateCommandMovecursor(userInput);
+                command(commandString);
+                commandHistory.add(commandString);
             }
             else if(userInputList.get(0).equals("glyph")){
                 commandString = Validation.validateCommandGlyph(userInput);
@@ -462,6 +375,22 @@ public class Terminal {
         System.out.println("** Example Usage: history");
     }
 
+    /**
+     * Displays help info for the fgcolor command.
+     */
+    public static void helpFgcolor() {
+        System.out.println("** This command changes the foreground color of the text.");
+        System.out.println("** Example Usage: fgcolor RED -> changes the text color to red.");
+        System.out.println("** Supported colors are: BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE");
+    }
+
+    /**
+     * Displays help info for the movecursor command.
+     */
+    public static void helpMovecursor() {
+        System.out.println("** This function takes two integer arguments and moves the cursor to the specified position on the screen.");
+        System.out.println("** Example Usage: movecursor 12 50");
+    }
 
     /**
      * Set the character displayed under the current cursor position.
@@ -495,7 +424,7 @@ public class Terminal {
      * @param commandString The unique part of a command sequence.
      */
     private static void command(String commandString) {
-        //bgcolor command
+        // bgcolor command
         if (commandString.substring(0, 7).equals("bgcolor")) {
             try {
                 setBgColor(Color.valueOf(commandString.substring(8)));
@@ -504,7 +433,7 @@ public class Terminal {
                 System.out.println("Invalid parameter. Please type bgcolor help for more details.");
             };
         }
-        //attribute command
+        // attribute command
         else if (commandString.substring(0, 9).equals("attribute")) {
             if (commandString.substring(10).equals("BRIGHT")) brighten();
             else if (commandString.substring(10).equals("DIM")) dim();
@@ -518,8 +447,8 @@ public class Terminal {
                 System.out.println("Invalid parameter. Please type attribute help for more details.");
             }
         }
-        //move command
-        else if (commandString.substring(0, 4).toLowerCase().equals("move")) {
+        // move command
+        else if (commandString.substring(0, 4).toLowerCase().equals("move") && commandString.substring(4, 5).equals(" ")) {
             List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
             if (userInputList.get(1).toUpperCase().equals("UP")) {
                 moveCursor(Direction.UP, Integer.parseInt(userInputList.get(2)));
@@ -567,7 +496,7 @@ public class Terminal {
             }
         }
 
-        //history command
+        // history command
         else if(commandString.substring(0,7).toLowerCase().equals("history")) {
             List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
             if(userInputList.get(1).toUpperCase().equals("HELP")) {
@@ -583,8 +512,47 @@ public class Terminal {
                 }
                 System.out.println(" ");
             }
-
         }
+        // fgcolor command
+        else if (commandString.substring(0, 7).toLowerCase().equals("fgcolor")) {
+            if (commandString.substring(8).toUpperCase().equals("HELP")) {
+                helpFgcolor();
+            }
+            else {
+                try {
+                    setColor(Color.valueOf(commandString.substring(8).toUpperCase()));
+                } catch (Exception e) {
+                    System.out.println("Invalid parameter. Please type fgcolor help for more details.");
+                }
+            }
+        }
+        // movecursor command
+        else if (commandString.substring(0, 10).toLowerCase().equals("movecursor")) {
+            List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
+            if (userInputList.get(1).toUpperCase().equals("HELP")) helpMovecursor();
+            else if (userInputList.get(1).toUpperCase().equals("INVALID")) {
+                System.out.println("Invalid parameter. Please type movecursor help for more details.");
+            }
+            else {
+                String possibleWrong = null;
+                try {
+                    possibleWrong = userInputList.get(1);
+                    int arg1 = Integer.parseInt(userInputList.get(1));
+                    possibleWrong = userInputList.get(2);
+                    int arg2 = Integer.parseInt(userInputList.get(2));
+                    moveTo(arg1, arg2);
+                } catch (Exception NumberFormatException) {
+                    System.out.println("Invalid parameter. Please type movecursor help for more details.");
+//                    System.out.println(String.format("Argument %s is of unsuitable type, please use only integers for this operation or consult the help command.", possibleWrong));
+                }
+            }
+        }
+
+
+
+
+
+
 
 
 

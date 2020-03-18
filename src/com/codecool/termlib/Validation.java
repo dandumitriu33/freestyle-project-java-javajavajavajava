@@ -62,6 +62,38 @@ public class Validation {
     }
 
     /**
+     * fgcolor command validation
+     */
+    public static String validateCommandFgcolor(List<String> userInputList) {
+        if (userInputList.size() != 2) {
+            return "fgcolor INVALID";
+        }
+        String fgc = userInputList.get(1).toUpperCase();
+        switch (fgc) {
+            case "BLACK":
+                return "fgcolor BLACK";
+            case "RED":
+                return "fgcolor RED";
+            case "GREEN":
+                return "fgcolor GREEN";
+            case "YELLOW":
+                return "fgcolor YELLOW";
+            case "BLUE":
+                return "fgcolor BLUE";
+            case "MAGENTA":
+                return "fgcolor MAGENTA";
+            case "CYAN":
+                return "fgcolor CYAN";
+            case "WHITE":
+                return "fgcolor WHITE";
+            case "HELP":
+                return "fgcolor HELP";
+        }
+        return "fgcolor INVALID";
+    }
+
+
+    /**
      * attribute command validation.
      *
      */
@@ -103,6 +135,25 @@ public class Validation {
         else if (userInputList.get(1).toUpperCase().equals("HELP")) return "move HELP";
         else return "move INVALID";
     }
+
+    /**
+     * movecursor command validation
+     */
+    public static String validateCommandMovecursor(String userInput) {
+        List<String> userInputList = new ArrayList<String>(Arrays.asList(userInput.split(" ")));
+        if (userInputList.size() > 3 || userInputList.size() < 2) return "movecursor INVALID";
+        else if (userInputList.size() == 2 && userInputList.get(1).toLowerCase().equals("help"))
+            return "movecursor HELP";
+        else if (userInputList.size() == 3 &&
+                validatePositiveInteger(userInputList.get(1)) &&
+                validatePositiveInteger(userInputList.get(2))) {
+            return userInputList.get(0).toLowerCase() + " " + userInputList.get(1) + " " + userInputList.get(2);
+        } else {
+            return "movecursor INVALID";
+        }
+    }
+
+
 
     /**
      * validates a positive integer (coming in as a string)
