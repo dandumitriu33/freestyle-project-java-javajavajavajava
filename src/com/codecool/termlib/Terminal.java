@@ -52,19 +52,11 @@ public class Terminal {
                 commandHistory.add(commandString);
             }
             else if (userInputList.get(0).equals("clear")) {
-                if (userInputList.size()>1 && userInputList.get(1).toUpperCase().equals("HELP")) {
-                    System.out.println("** Clears the screen without resetting the preferences.");
-                    System.out.println("** Example: clear");
-                    commandHistory.add(userInputList.get(0) + " " + userInputList.get(1));
-                }
-                else if (userInputList.size()>1 && !userInputList.get(1).toUpperCase().equals("HELP")) {
-                    System.out.println("Invalid clear command. Please type clear help for more info.");
-                }
-                else {
-                    commandHistory.add(userInputList.get(0));
-                    clearScreen();
-                }
-            } else if (userInputList.get(0).equals("fgcolor")){
+                commandString = Validation.validateCommandClear(userInput);
+                command(commandString);
+                commandHistory.add(commandString);
+            }
+            else if (userInputList.get(0).equals("fgcolor")){
                 commandString = Validation.validateCommandFgcolor(userInputList);
                 command(commandString);
                 commandHistory.add(commandString);
@@ -393,6 +385,14 @@ public class Terminal {
     }
 
     /**
+     * Displays help info for the clear command.
+     */
+    public static void helpClear() {
+        System.out.println("** Clears the screen without resetting the preferences.");
+        System.out.println("** Example: clear");
+    }
+
+    /**
      * Set the character displayed under the current cursor position.
      *
      * The actual cursor position after calling this method is the
@@ -424,8 +424,9 @@ public class Terminal {
      * @param commandString The unique part of a command sequence.
      */
     private static void command(String commandString) {
+        List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
         // bgcolor command
-        if (commandString.substring(0, 7).equals("bgcolor")) {
+        if (userInputList.get(0).toLowerCase().equals("bgcolor")) {
             try {
                 setBgColor(Color.valueOf(commandString.substring(8)));
             }
@@ -434,7 +435,7 @@ public class Terminal {
             };
         }
         // attribute command
-        else if (commandString.substring(0, 9).equals("attribute")) {
+        else if (userInputList.get(0).toLowerCase().equals("attribute")) {
             if (commandString.substring(10).equals("BRIGHT")) brighten();
             else if (commandString.substring(10).equals("DIM")) dim();
             else if (commandString.substring(10).equals("UNDERSCORE")) setUnderline();
@@ -448,8 +449,7 @@ public class Terminal {
             }
         }
         // move command
-        else if (commandString.substring(0, 4).toLowerCase().equals("move") && commandString.substring(4, 5).equals(" ")) {
-            List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
+        else if (userInputList.get(0).toLowerCase().toLowerCase().equals("move")) {
             if (userInputList.get(1).toUpperCase().equals("UP")) {
                 moveCursor(Direction.UP, Integer.parseInt(userInputList.get(2)));
             }
@@ -470,8 +470,7 @@ public class Terminal {
             }
         }
         // glyph command
-        else if (commandString.substring(0, 5).toLowerCase().equals("glyph")) {
-            List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
+        else if (userInputList.get(0).toLowerCase().equals("glyph")) {
             if (userInputList.get(1).toLowerCase().equals("help")) {
                 helpGlyph();
             } else if (userInputList.get(1).toLowerCase().equals("invalid")) {
@@ -487,8 +486,7 @@ public class Terminal {
         }
 
         // clock command
-        else if(commandString.substring(0, 5).toLowerCase().equals("clock")) {
-            List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
+        else if(userInputList.get(0).toLowerCase().equals("clock")) {
             if (userInputList.get(1).toUpperCase().equals("DEFAULT")) {
                 clock("DEFAULT");
             } else {
@@ -497,8 +495,7 @@ public class Terminal {
         }
 
         // history command
-        else if(commandString.substring(0,7).toLowerCase().equals("history")) {
-            List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
+        else if(userInputList.get(0).toLowerCase().equals("history")) {
             if(userInputList.get(1).toUpperCase().equals("HELP")) {
                 helpHistory();
             } else if (userInputList.get(1).toUpperCase().equals("ERROR_COMMAND")) {
@@ -514,7 +511,7 @@ public class Terminal {
             }
         }
         // fgcolor command
-        else if (commandString.substring(0, 7).toLowerCase().equals("fgcolor")) {
+        else if (userInputList.get(0).toLowerCase().equals("fgcolor")) {
             if (commandString.substring(8).toUpperCase().equals("HELP")) {
                 helpFgcolor();
             }
@@ -527,8 +524,7 @@ public class Terminal {
             }
         }
         // movecursor command
-        else if (commandString.substring(0, 10).toLowerCase().equals("movecursor")) {
-            List<String> userInputList = new ArrayList<String>(Arrays.asList(commandString.split(" ")));
+        else if (userInputList.get(0).toLowerCase().equals("movecursor")) {
             if (userInputList.get(1).toUpperCase().equals("HELP")) helpMovecursor();
             else if (userInputList.get(1).toUpperCase().equals("INVALID")) {
                 System.out.println("Invalid parameter. Please type movecursor help for more details.");
@@ -547,11 +543,14 @@ public class Terminal {
                 }
             }
         }
-
-
-
-
-
+        // clear command
+        else if (userInputList.get(0).toLowerCase().equals("clear")) {
+            if (userInputList.size()==1) clearScreen();
+            else if (userInputList.size()>1 && userInputList.get(1).toUpperCase().equals("HELP")) helpClear();
+            else {
+                System.out.println("Invalid clear command. Please type clear help for more info.");
+            }
+        }
 
 
 
