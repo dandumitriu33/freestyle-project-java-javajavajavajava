@@ -1,8 +1,7 @@
 package com.codecool.termlib;
 
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -16,7 +15,7 @@ public class Terminal {
 
     private static List <String> commandHistory = new ArrayList<String>();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         clearScreen();
         try {
             loadingScreen();
@@ -78,8 +77,10 @@ public class Terminal {
             }
             else if (userInputList.get(0).toLowerCase().equals("debug_read"))
             {
-                File textFile = new File("com/codecool/termlib/exampleText.txt");
-                readFromFile(textFile);
+                //File textFile = new File("com/codecool/termlib/exampleText.txt");
+                //readFromFile(textFile);
+                String filename = "exampleText.txt";
+                readFromJar(filename);
                 commandHistory.add(userInputList.get(0));
             }
             else if (userInputList.get(0).toLowerCase().equals("history")) {
@@ -656,6 +657,25 @@ public class Terminal {
         catch (FileNotFoundException e){
             System.out.println("ERROR: File not found.");
         }
+    }
+
+    public static void readFromJar (String filename) throws IOException {
+        InputStream inputStream = Terminal.class.getResourceAsStream(filename);
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        StringBuffer stringBuffer = new StringBuffer();
+        String line;
+        while((line = bufferedReader.readLine())!=null) {
+            stringBuffer.append(line);
+            System.out.println(line);
+        }
+        bufferedReader.close();
+        inputStreamReader.close();
+        inputStream.close();
+        String result = stringBuffer.toString();
+
+
+
     }
 
     public static void clock (String time)
