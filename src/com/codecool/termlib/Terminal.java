@@ -315,7 +315,7 @@ public class Terminal {
         System.out.println("** Please type: <command> help for each command details.");
         System.out.println("** Available commands: bgcolor, fgcolor, move, movecursor, ");
         System.out.println("** attribute bright|dim|underscore|blink|hidden|reset|reverse,");
-        System.out.println("** glyph, clear, quit.");
+        System.out.println("** glyph, clear, clock, history, quit.");
     }
 
     /**
