@@ -17,6 +17,7 @@ public class Terminal {
     private static List <String> commandHistory = new ArrayList<String>();
 
     public static void main(String[] args) {
+        clearScreen();
         try {
             loadingScreen();
         } catch (InterruptedException e) {
@@ -40,43 +41,42 @@ public class Terminal {
                 commandString = Validation.validateCommandBgcolor(userInputList);
                 command(commandString);
             }
-            else if (userInputList.get(0).equals("attribute")) {
+            else if (userInputList.get(0).toLowerCase().equals("attribute")) {
                 commandString = Validation.validateCommandAttribute(userInputList);
                 command(commandString);
             }
-            else if (userInputList.get(0).equals("move")) {
+            else if (userInputList.get(0).toLowerCase().equals("move")) {
                 commandString = Validation.validateCommandMove(userInput);
                 command(commandString);
             }
-            else if (userInputList.get(0).equals("clear")) {
+            else if (userInputList.get(0).toLowerCase().equals("clear")) {
                 commandString = Validation.validateCommandClear(userInput);
                 command(commandString);
-                commandHistory.add(commandString);
             }
-            else if (userInputList.get(0).equals("fgcolor")){
+            else if (userInputList.get(0).toLowerCase().equals("fgcolor")){
                 commandString = Validation.validateCommandFgcolor(userInputList);
                 command(commandString);
 
             }
-            else if (userInputList.get(0).equals("quit") && userInputList.size()==1){
+            else if (userInputList.get(0).toLowerCase().equals("quit") && userInputList.size()==1){
                 resetStyle();
                 clearScreen();
                 break;
             }
-            else if (userInputList.get(0).equals("movecursor")){
+            else if (userInputList.get(0).toLowerCase().equals("movecursor")){
                 commandString = Validation.validateCommandMovecursor(userInput);
                 command(commandString);
 
             }
-            else if(userInputList.get(0).equals("glyph")){
+            else if(userInputList.get(0).toLowerCase().equals("glyph")){
                 commandString = Validation.validateCommandGlyph(userInput);
                 command(commandString);
             }
-            else if(userInputList.get(0).equals("help")) {
+            else if(userInputList.get(0).toLowerCase().equals("help")) {
                 help();
                 commandHistory.add(userInputList.get(0));
             }
-            else if (userInputList.get(0).equals("debug_read"))
+            else if (userInputList.get(0).toLowerCase().equals("debug_read"))
             {
                 File textFile = new File("com/codecool/termlib/exampleText.txt");
                 readFromFile(textFile);
@@ -90,7 +90,6 @@ public class Terminal {
             else if (userInputList.get(0).toLowerCase().equals("clock")) {
                 commandString = Validation.validateCommandClock(userInput);
                 command(commandString);
-                commandHistory.add(commandString);
             }
             else{
                 System.out.println("ERROR: Command unrecognized. Type help for more info.");
@@ -315,7 +314,7 @@ public class Terminal {
         System.out.println("** Please type: <command> help for each command details.");
         System.out.println("** Available commands: bgcolor, fgcolor, move, movecursor, ");
         System.out.println("** attribute bright|dim|underscore|blink|hidden|reset|reverse,");
-        System.out.println("** glyph, clear, quit.");
+        System.out.println("** glyph, clear, clock, history, quit.");
     }
 
     /**
@@ -532,10 +531,13 @@ public class Terminal {
         // clock command
         else if(userInputList.get(0).toLowerCase().equals("clock")) {
             if (userInputList.get(1).toUpperCase().equals("DEFAULT")) {
+                commandHistory.add("clock");
                 clock("DEFAULT");
             } else {
+                commandHistory.add(String.format("clock %s", userInputList.get(1).toUpperCase()));
                 clock(userInputList.get(1).toUpperCase());
             }
+//            commandHistory.add("clock");
         }
 
         // history command
@@ -593,8 +595,14 @@ public class Terminal {
         }
         // clear command
         else if (userInputList.get(0).toLowerCase().equals("clear")) {
-            if (userInputList.size()==1) clearScreen();
-            else if (userInputList.size()>1 && userInputList.get(1).toUpperCase().equals("HELP")) helpClear();
+            if (userInputList.size()==1) {
+                commandHistory.add("clear");
+                clearScreen();
+            }
+            else if (userInputList.size()>1 && userInputList.get(1).toUpperCase().equals("HELP")){
+                commandHistory.add("clear help");
+                helpClear();
+            }
             else {
                 System.out.println("Invalid clear command. Please type clear help for more info.");
             }
