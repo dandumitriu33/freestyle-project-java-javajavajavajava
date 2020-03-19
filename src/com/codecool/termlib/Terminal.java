@@ -17,6 +17,7 @@ public class Terminal {
     private static List <String> commandHistory = new ArrayList<String>();
 
     public static void main(String[] args) {
+        clearScreen();
         try {
             loadingScreen();
         } catch (InterruptedException e) {
@@ -51,7 +52,6 @@ public class Terminal {
             else if (userInputList.get(0).toLowerCase().equals("clear")) {
                 commandString = Validation.validateCommandClear(userInput);
                 command(commandString);
-                commandHistory.add(commandString);
             }
             else if (userInputList.get(0).toLowerCase().equals("fgcolor")){
                 commandString = Validation.validateCommandFgcolor(userInputList);
@@ -90,7 +90,6 @@ public class Terminal {
             else if (userInputList.get(0).toLowerCase().equals("clock")) {
                 commandString = Validation.validateCommandClock(userInput);
                 command(commandString);
-                commandHistory.add(commandString);
             }
             else{
                 System.out.println("ERROR: Command unrecognized. Type help for more info.");
@@ -532,10 +531,13 @@ public class Terminal {
         // clock command
         else if(userInputList.get(0).toLowerCase().equals("clock")) {
             if (userInputList.get(1).toUpperCase().equals("DEFAULT")) {
+                commandHistory.add("clock");
                 clock("DEFAULT");
             } else {
+                commandHistory.add(String.format("clock %s", userInputList.get(1).toUpperCase()));
                 clock(userInputList.get(1).toUpperCase());
             }
+//            commandHistory.add("clock");
         }
 
         // history command
@@ -593,8 +595,14 @@ public class Terminal {
         }
         // clear command
         else if (userInputList.get(0).toLowerCase().equals("clear")) {
-            if (userInputList.size()==1) clearScreen();
-            else if (userInputList.size()>1 && userInputList.get(1).toUpperCase().equals("HELP")) helpClear();
+            if (userInputList.size()==1) {
+                commandHistory.add("clear");
+                clearScreen();
+            }
+            else if (userInputList.size()>1 && userInputList.get(1).toUpperCase().equals("HELP")){
+                commandHistory.add("clear help");
+                helpClear();
+            }
             else {
                 System.out.println("Invalid clear command. Please type clear help for more info.");
             }
