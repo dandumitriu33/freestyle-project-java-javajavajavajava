@@ -644,6 +644,10 @@ public class Terminal {
         resetStyle();
     }
 
+    /**
+     * Takes a textfile and outputs its contents
+     * @param textFile a file type object
+     */
     public static void readFromFile(File textFile)
     {
         try {
