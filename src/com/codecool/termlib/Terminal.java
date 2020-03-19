@@ -40,43 +40,43 @@ public class Terminal {
                 commandString = Validation.validateCommandBgcolor(userInputList);
                 command(commandString);
             }
-            else if (userInputList.get(0).equals("attribute")) {
+            else if (userInputList.get(0).toLowerCase().equals("attribute")) {
                 commandString = Validation.validateCommandAttribute(userInputList);
                 command(commandString);
             }
-            else if (userInputList.get(0).equals("move")) {
+            else if (userInputList.get(0).toLowerCase().equals("move")) {
                 commandString = Validation.validateCommandMove(userInput);
                 command(commandString);
             }
-            else if (userInputList.get(0).equals("clear")) {
+            else if (userInputList.get(0).toLowerCase().equals("clear")) {
                 commandString = Validation.validateCommandClear(userInput);
                 command(commandString);
                 commandHistory.add(commandString);
             }
-            else if (userInputList.get(0).equals("fgcolor")){
+            else if (userInputList.get(0).toLowerCase().equals("fgcolor")){
                 commandString = Validation.validateCommandFgcolor(userInputList);
                 command(commandString);
 
             }
-            else if (userInputList.get(0).equals("quit") && userInputList.size()==1){
+            else if (userInputList.get(0).toLowerCase().equals("quit") && userInputList.size()==1){
                 resetStyle();
                 clearScreen();
                 break;
             }
-            else if (userInputList.get(0).equals("movecursor")){
+            else if (userInputList.get(0).toLowerCase().equals("movecursor")){
                 commandString = Validation.validateCommandMovecursor(userInput);
                 command(commandString);
 
             }
-            else if(userInputList.get(0).equals("glyph")){
+            else if(userInputList.get(0).toLowerCase().equals("glyph")){
                 commandString = Validation.validateCommandGlyph(userInput);
                 command(commandString);
             }
-            else if(userInputList.get(0).equals("help")) {
+            else if(userInputList.get(0).toLowerCase().equals("help")) {
                 help();
                 commandHistory.add(userInputList.get(0));
             }
-            else if (userInputList.get(0).equals("debug_read"))
+            else if (userInputList.get(0).toLowerCase().equals("debug_read"))
             {
                 File textFile = new File("com/codecool/termlib/exampleText.txt");
                 readFromFile(textFile);
