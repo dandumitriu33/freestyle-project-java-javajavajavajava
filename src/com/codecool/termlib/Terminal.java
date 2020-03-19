@@ -659,6 +659,12 @@ public class Terminal {
         }
     }
 
+    /**
+     * Reads the included file as a stream of bytes
+     * and outputs each line
+     * @param filename the string with the filename and path
+     * @throws IOException
+     */
     public static void readFromJar (String filename) throws IOException {
         InputStream inputStream = Terminal.class.getResourceAsStream(filename);
         InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
